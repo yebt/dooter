@@ -1,6 +1,9 @@
 #!/bin/bash
+DEFAULTVALUE=sh
+COMMAND="${1:-$DEFAULTVALUE}"
+
 selection=`podman ps --format "{{.Names}}" | fzf `
 if [ -z "$selection" ]; then
 	exit 0
 fi
-podman exec -it $selection sh
+podman exec -it $selection $COMMAND
