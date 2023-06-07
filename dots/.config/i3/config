@@ -231,8 +231,14 @@ bindsym $mod+Tab workspace back_and_forth
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
 
-# 
+# toggle bar
 bindsym $mod+m bar mode toggle
+
+# toggle workspace
+bindsym $mod+Shift+w move workspace to output left
+
+# force destroy
+bindsym $mod+Shift+x exec xkill
 
 # move an maxim
 bindsym $mod+t  border pixel 2, resize set width 99ppt, resize set height 99ppt, move position center
@@ -303,6 +309,8 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
+    	mode hide
+        hidden_state hide
         status_command i3status
 }
 
@@ -328,5 +336,9 @@ exec --no-startup-id /usr/lib/gsd-xsettings
 #exec --no-startup-id /usr/lib/gsd-xsettings
 #exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
+exec_always --no-startup-id nitrogen --restore
+exec autorandr
+
 exec_always --no-startup-id killall picom && picom || picom
+
 #: }}}

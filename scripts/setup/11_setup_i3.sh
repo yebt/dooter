@@ -7,6 +7,9 @@ sudo dnf install \
 	dunst \
 	nitrogen \
 	scrot \
+	autorandr \
+	xrandr \
+	arandr \
 	-y
 # Better locker
 wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | bash -s user
