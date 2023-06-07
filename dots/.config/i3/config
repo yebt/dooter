@@ -40,7 +40,7 @@ focus_follows_mouse yes
 popup_during_fullscreen smart
 workspace_layout default
 title_align right
-# default_border normal 3
+default_border pixel 1
 # toggle workspace if is active
 # workspace_auto_back_and_forth yes 
 show_marks yes
@@ -230,6 +230,9 @@ bindsym $mod+Tab workspace back_and_forth
 # scratchpad
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
+
+# 
+bindsym $mod+m bar mode toggle
 
 # move an maxim
 bindsym $mod+t  border pixel 2, resize set width 99ppt, resize set height 99ppt, move position center
