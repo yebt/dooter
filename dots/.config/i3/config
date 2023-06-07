@@ -1,0 +1,329 @@
+## vim:fileencoding=utf-8:foldmethod=marker:foldlevel=9
+
+#: VARS {{{
+set $mod Mod4
+set $refresh_i3status killall -SIGUSR1 i3status
+set $term kitty
+set $locker i3lock -f -e  -b -c 282828 -n  
+set $notificate notify-send
+set $refresh_i3status killall -SIGUSR1 i3status
+set $compositor compton
+## Values
+set $brigness_porcent 2
+set $vol_porcent 2
+set $gaps_default_inner 3
+set $gaps_default_outer 3
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1  "1: "
+set $ws2  "2: "
+set $ws3  "3: "
+set $ws4  "4: "
+set $ws5  "5: "
+set $ws6  "6: "
+set $ws7  "7: "
+set $ws8  "8: "
+set $ws9  "9: "
+set $ws10 "10: "
+
+#: }}}
+
+#: APPARENCE {{{
+# font pango:DejaVu Sans Mono 8
+font pango:JetBrainsMono NF 8
+# floating_minimum_size 75 x 75
+default_orientation horizontal
+default_floating_border pixel 1
+hide_edge_borders smart_no_gaps
+focus_follows_mouse yes
+popup_during_fullscreen smart
+workspace_layout default
+title_align right
+# default_border normal 3
+# toggle workspace if is active
+# workspace_auto_back_and_forth yes 
+show_marks yes
+#floating_minimum_size 800 x 500
+#: }}}
+
+
+#: RUELS {{{
+for_window [all] title_window_icon padding 10px
+# for_window [floating] move position center
+for_window [class="firefox" window_role="PictureInPicture"] floating enable, border pixel 1, sticky enable
+for_window [class="firefox" window_role="About"] floating enable
+# for_window [instance="fontpreview"] floating enable
+for_window [class="feh" ] border pixel 2, floating enable
+# for_window [instance=nomacs ] border normal 0, floating enable
+#no_focus [class="firefox" window_role="PictureInPicture"]
+for_window [class="kittyfloat" title="kitty" ] border none, floating enable
+# for_window [class="Alacritty" ] floating enable, border normal 1
+for_window [class="Alacritty" ]  border 0
+for_window [class="Nitrogen"] floating enable, move position center
+for_window [window_role="pop-up"] floating enable, move position center, border none
+for_window [window_role="toolbox"] floating enable, move position  70 ppt 3 ppt, resize set 30 ppt 95 ppt , border pixel 3
+
+for_window [class="Tk"] floating enable, border normal
+for_window [class="Toplevel"] floating enable, border normal
+for_window [class="Protonvpn"] floating enable
+for_window [class="xpad" instance="xpad"] floating enable, border pixel 2
+for_window [class="Tomboy" instance="Tomboy"] floating enable
+
+# Lutris rules
+for_window [class="Lutris"] floating enable
+for_window [class="leagueclient.exe"] floating enable
+for_window [class="leagueclientux.exe"] floating enable
+
+# for_window [class="jetbrains-clion"] floating enable
+# for_window [class="jetbrains-studio" ] floating enable, border normal 1
+# jetbrains
+for_window [title="splash"] floating enable, move position center
+# for_window [class="jetbrains-studio" ] floating enable, border normal 1
+
+# for_window [instance="xpad"] move workspace $ws5
+# for_window [class="xpad"] move workspace $ws5
+
+
+no_focus [title="Picture-in-Picture"] 
+no_focus [class="firefox" window_role="PictureInPicture"]
+
+
+## remplace the move with assign
+assign [class="Lutris"] $ws4
+assign [class="leagueclient.exe"] $ws4
+assign [class="leagueclientux.exe"] $ws4
+assign [class="league of legends.exe"] $ws4
+assign [class="live.na.exe"] $ws4
+assign [class="riotclientux.exe"] $ws4
+
+assign [class="Protonvpn"] $ws3
+
+assign [class="xpad"] $ws5
+assign [instance="xpad"] $ws5
+
+assign [class="jetbrains-studio"] $ws2
+
+#: }}}
+
+#: GAPS {{{
+# gaps inner 4
+# gaps outer 2
+# smart_gaps on
+gaps outer $gaps_default_inner
+gaps inner $gaps_default_outer
+smart_gaps inverse_outer
+#: }}}
+
+#:  KEYS {{{
+
+# Use pactl to adjust volume in PulseAudio.
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +$vol_porcent% && $notificate -u low -r 9 -t 1000 -h int:value:$(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}')  "Vol: $(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}') -- $(pactl get-sink-mute @DEFAULT_SINK@)"  && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -$vol_porcent% && $notificate -u low -r 9 -t 1000 -h int:value:$(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}')  "Vol: $(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}') -- $(pactl get-sink-mute @DEFAULT_SINK@)" && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $notificate -u low  -r 9 -t 1000 "$(pactl get-sink-mute @DEFAULT_SINK@)" && $refresh_i3status
+# bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && notify-send -u normal -r 9 "$(pactl get-sink-volume @DEFAULT_SINK@)"
+
+# bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+# bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+# bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+# bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+# brigneess
+bindsym XF86MonBrightnessUp   exec --no-startup-id light -A $brigness_porcent && $notificate -u low -r 9 -t 900 -h int:value:$(light -G) "Brgnss $(light -G)%"
+bindsym XF86MonBrightnessDown exec --no-startup-id light -U $brigness_porcent && $notificate -u low -r 9 -t 900 -h int:value:$(light -G) "Brgnss $(light -G)%"
+
+#scrot '/tmp/%F_%T_$wx$h.png' -s -e 'xclip -selection clipboard -target image/png -i $f'
+bindsym --release Print exec --no-startup-id "scrot  ~/Pictures/screenshots/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot\n $f\\" Scrot' " 
+bindsym --release Shift+Print exec --no-startup-id "scrot -s ~/Pictures/screenshots/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot\n $f\\" Scrot' " 
+bindsym --release $mod+Print exec --no-startup-id "scrot -u ~/Pictures/screenshots/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot\n $f\\" Scrot' " 
+bindsym --release Control+Print exec --no-startup-id "scrot  /tmp/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot copied on clipboard\\" Scrot & xclip -selection clipboard -target image/png -i $f' " 
+bindsym --release Control+Shift+Print exec --no-startup-id "scrot -s /tmp/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot copied on clipboard\\" Scrot & xclip -selection clipboard -target image/png -i $f' " 
+bindsym --release Control+$mod+Print exec --no-startup-id "scrot -u /tmp/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot copied on clipboard\\" Scrot & xclip -selection clipboard -target image/png -i $f' " 
+
+# Play controls
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+
+# Terminal manament
+bindsym $mod+Return exec $term
+bindsym $mod+Shift+Return exec $term --class 'kittyfloat' --title 'kitty'
+
+
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+# move tiling windows via drag & drop by left-clicking into the title bar,
+# or left-clicking anywhere into the window while holding the floating modifier.
+tiling_drag modifier titlebar
+
+# start a terminal
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# start dmenu (a program launcher)
+#bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+d exec --no-startup-id ulauncher-toggle
+# A more modern dmenu replacement is rofi:
+# bindcode $mod+40 exec "rofi -modi drun,run -show drun"
+# There also is i3-dmenu-desktop which only displays applications shipping a
+# .desktop file. It is a wrapper around dmenu, so you need that installed.
+# bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+#bindsym $mod+d focus child
+
+# toggle last workspace
+bindsym $mod+Tab workspace back_and_forth
+
+#
+# scratchpad
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+# move an maxim
+bindsym $mod+t  border pixel 2, resize set width 99ppt, resize set height 99ppt, move position center
+bindsym $mod+Shift+t resize set width 70ppt, resize set height 80ppt, move position center
+bindsym $mod+c move position center
+
+# switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+#: }}}
+
+
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym semicolon resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or $mod+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+        status_command i3status
+}
+
+
+#:---------------------------------------------
+#: Execs
+#:---------------------------------------------
+#: {{{
+# Start XDG autostart .desktop files using dex. See also
+# https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id dex-autostart --autostart --environment i3
+
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+# NetworkManager is the most popular way to manage wireless networks on Linux,
+# and nm-applet is a desktop environment-independent system tray GUI for it.
+exec --no-startup-id nm-applet
+
+
+exec --no-startup-id /usr/lib/gsd-xsettings
+#exec --no-startup-id /usr/lib/gsd-xsettings
+#exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+
+exec_always --no-startup-id killall picom && picom || picom
+#: }}}

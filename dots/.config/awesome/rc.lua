@@ -52,7 +52,13 @@ end
 
 -- {{{ Variable definition
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+-- beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+-- default
+-- gtk
+-- sky
+-- xresources
+-- zenburn
+beautiful.init(gears.filesystem.get_themes_dir() .. "zenburn/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 --terminal = "xterm"
@@ -89,7 +95,7 @@ awful.layout.layouts = {
 }
 -- }}}
 
--- {{{ Menu
+-- {{{ Menuz
 -- Create a launcher widget and a main menu
 myawesomemenu = {
   {
@@ -263,25 +269,30 @@ root.buttons(gears.table.join(
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
+  -- USAGE
   awful.key({ modkey }, "s", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
+
+  --  Motions
   awful.key({ modkey }, "Left", awful.tag.viewprev, { description = "view previous", group = "tag" }),
   awful.key({ modkey }, "Right", awful.tag.viewnext, { description = "view next", group = "tag" }),
   -- go to last wrkspace
   awful.key({ modkey }, "Escape", awful.tag.history.restore, { description = "go back", group = "tag" }),
 
   -- # Go to next
-  awful.key({ modkey }, "j", function()
-    awful.client.focus.byidx(1)
-  end, { description = "focus next by index", group = "client" }),
-  awful.key({ modkey }, "k", function()
-    awful.client.focus.byidx(-1)
-  end, { description = "focus previous by index", group = "client" }),
+  --  awful.key({ modkey }, "j", function()
+  --    awful.client.focus.byidx(1)
+  --  end, { description = "focus next by index", group = "client" }),
+  --  awful.key({ modkey }, "k", function()
+  --    awful.client.focus.byidx(-1)
+  --  end, { description = "focus previous by index", group = "client" }),
+
+  -- menu
   awful.key({ modkey }, "w", function()
     mymainmenu:show()
   end, { description = "show main menu", group = "awesome" }),
 
   -- Layout manipulation
-  awful.key({ modkey, "Shift" }, "j", function()
+  awful.key({ modkey, "Shift" }, "h", function()
     awful.client.swap.byidx(1)
   end, { description = "swap with next client by index", group = "client" }),
   awful.key({ modkey, "Shift" }, "k", function()
