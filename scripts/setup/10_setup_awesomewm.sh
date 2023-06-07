@@ -1,4 +1,3 @@
 #!/bin/bash
 # Awesome WM
-sudo dnf install awesome xev -y
-
+sudo dnf install awesome xev dunst make -y
