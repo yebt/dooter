@@ -19,6 +19,7 @@ alacritty \
 git \
 axel \
 nitrogen \
+nomacs \
 -y
 
 # shells

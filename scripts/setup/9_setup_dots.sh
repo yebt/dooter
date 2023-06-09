@@ -13,7 +13,7 @@ sym_link(){
 	file=$1
 	d_file=$2
 	if [[ -z "$2" ]]; then
-		return 1
+		return 
 	fi
 	echo "-> $d_file"
 	if [[ -e $d_file ]]; 
@@ -21,7 +21,7 @@ sym_link(){
 		if [[ -L $d_file || -h $d_file ]];
 		then
 			echo "  [Skip] $d_file, symbolic link already exist"
-			return 1
+			return 
 		else
 			sufix="_bak"
 			d_file_bak="$d_file$sufix"
@@ -60,6 +60,14 @@ then
 	cd ..
 fi
 
-for file in $(find . -maxdepth 1 -type f -not -path ".config" ); do
+# for file in $(find . -maxdepth 1 -not -path ".config" ); do
+# 	echo "-> $file"
+# 	#sym_link   "$(pwd)/$file" "$HOME/$file"
+# done
+for file in $(ls -a); do
+	if [[ "$file" ==   "."  || "$file" == ".." || "$file" == ".config" ]]; then
+		continue
+	fi
 	sym_link   "$(pwd)/$file" "$HOME/$file"
 done
+

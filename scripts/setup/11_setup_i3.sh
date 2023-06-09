@@ -10,6 +10,7 @@ sudo dnf install \
 	autorandr \
 	xrandr \
 	arandr \
+	make \
 	-y
 # Better locker
 wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | bash -s user
