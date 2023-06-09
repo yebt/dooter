@@ -1,0 +1,9 @@
+[user]
+	email = yahir.eduardo.bravo@gmail.com
+	name = Eduardo Bravo
+[alias]
+	st = status -sb
+	cm = commit -m
+	ps = push
+[init]
+	defaultBranch = main
