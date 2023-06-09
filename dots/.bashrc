@@ -9,7 +9,8 @@ export OSH='/home/eb/.oh-my-bash'
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-bash is loaded.
-OSH_THEME="pure"
+OSH_THEME="pure_w"
+#OSH_THEME="agnoster"
 
 # Uncomment the following line to use case-sensitive completion.
 # OMB_CASE_SENSITIVE="true"
