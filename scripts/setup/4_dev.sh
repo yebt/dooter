@@ -1,5 +1,7 @@
 sudo dnf install \
 gcc \
+g++ \
+make \
 kernel-headers \
 -y
 #

@@ -118,7 +118,8 @@ local winbar_str = ""
   .. "%="
   .. "%{%v:lua.Pdiagnostics()%}"
   -- .. "%{ v:lua.append_v(get(b:,'gitsigns_head',''),'  󰘬 ', '')}"
-  .. "%#Constant#%{ v:lua.append_v(get(b:,'gitsigns_head',''),'  󰘬 ', '')}"
+  --  󰘬 
+  .. "%#Constant#%{ v:lua.append_v(get(b:,'gitsigns_head',''),'   ', '')}"
 
 local statusline_str = ""
   .. "%#Normal# %0*"
