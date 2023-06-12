@@ -1,6 +1,6 @@
 require("config.options")
 require("config.keymaps")
 require("config.autocomands")
-require("config.color")
 require("config.status")
 require("config.lazy")
+require("config.color")
