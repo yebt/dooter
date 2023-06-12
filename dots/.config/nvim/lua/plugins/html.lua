@@ -1,5 +1,27 @@
 return {
-  ---- Match aparent and show it on top
+  -- Expand html
+  {
+    "mattn/emmet-vim",
+    --ft = filetypes,
+    -- event = "VeryLazy",
+    event = {
+      "InsertEnter",
+      "CursorMoved",
+    },
+    cmd = {
+      "EmmetInstall",
+    },
+    keys = {
+      --{ "<C-y>,", mode = { "i", "n", "x" } },
+      --{ "<Tab>", 'v:lua.check_back_space() ? "<Tab>" : "<C-y>,"', mode = { "i" }, remap = true, expr = true },
+    },
+    config = function()
+      vim.g.user_emmet_mode = "i"
+      --	vim.g.user_emmet_leader_key = "<C-Z>"
+    end,
+  },
+
+  -- Match aparent and show it on top
   {
     "andymass/vim-matchup",
     --event = "VeryLazy",
