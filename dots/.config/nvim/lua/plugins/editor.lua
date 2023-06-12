@@ -141,5 +141,72 @@ return {
     keys = {
       { "<leader>sr", function() require("spectre").open() end, desc = "Replace in files (Spectre)" },
     },
+    opts = {
+      live_update = true,
+      --line_sep_start = "┌-----------------------------------------",
+      line_sep_start = "┌─────────────────────────────────────────",
+      --result_padding = "¦  ",
+      result_padding = " ├─ ",
+      --line_sep = "└-----------------------------------------",
+      line_sep = "└─────────────────────────────────────────",
+    },
+  },
+
+  -- Motions
+  {
+    "ggandor/flit.nvim",
+    keys = {
+      { "T", mode = { "n", "x", "o" } },
+      { "t", mode = { "n", "x", "o" } },
+      { "F", mode = { "n", "x", "o" } },
+      { "f", mode = { "n", "x", "o" } },
+      { ";", mode = { "n", "x", "o" } },
+      { ",", mode = { "n", "x", "o" } },
+    },
+    -- keys = function()
+    --   ---@type LazyKeys[]
+    --   local ret = {}
+    --   for _, key in ipairs({ "f", "F", "t", "T" }) do
+    --     ret[#ret + 1] = { key, mode = { "n", "x", "o" }, desc = key }
+    --   end
+    --   return ret
+    -- end,
+    opts = { labeled_modes = "nx" },
+  },
+
+  -- Lesap
+  {
+    "ggandor/leap.nvim",
+    keys = {
+      {
+        "<leader><leader>s",
+        ":lua require('leap').leap ({ target_windows = {  vim.fn.win_getid() } })<CR>",
+       mode = { "n", "x" },
+      },
+    },
+    opts = {
+      -- highlight_unlabeled_phase_one_targets = true,
+      -- max_highlighted_traversal_targets = 10,
+      -- case_sensitive = false,
+      -- equivalence_classes = { " \t\r\n" },
+      -- substitute_chars = {},
+      --  -- safe_labels = { "s", "f", "n", "u", "t" },
+      --  safe_labels = { "s", "f", "n", "u", "t", "/", "S", "F", "N", "L", "H", "M", "U", "G", "T", "?", "Z" },
+      -- -- labels = { "s", "f", "n", "j", "k" },
+      -- -- stylua: ignore
+      -- labels = {
+      --  "s", "f", "n", "j", "k", "l", "h", "o", "d", "w", "e", "m", "b", "u", "y", "v", "r", "g", "t", "c", "x", "/", "z", "S", "F", "N", "J", "K", "L", "H", "O", "D", "W", "E", "M", "B", "U", "Y", "V", "R", "G", "T", "C", "X", "?", "Z",
+      -- },
+      special_keys = {
+        repeat_search = "<enter>",
+        next_phase_one_target = "<enter>",
+        next_target = { "<enter>", ";" },
+        prev_target = { "<tab>" },
+        next_group = "<space>",
+        prev_group = "<tab>",
+        multi_accept = "<enter>",
+        multi_revert = "<backspace>",
+      },
+    },
   },
 }
