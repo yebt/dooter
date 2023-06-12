@@ -7,6 +7,17 @@ function M.has(plugin)
   return require("lazy.core.config").plugins[plugin] ~= nil
 end
 
+---@param on_attach fun(client, buffer)
+function M.on_attach(on_attach)
+  vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+      local buffer = args.buf
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      on_attach(client, buffer)
+    end,
+  })
+end
+
 -- returns the root directory based on:
 -- * lsp workspace folders
 -- * lsp root_dir
@@ -27,6 +38,7 @@ function M.get_root()
       end, workspace) or client.config.root_dir and { client.config.root_dir } or {}
       for _, p in ipairs(paths) do
         local r = vim.loop.fs_realpath(p)
+        r = r or ""
         if path:find(r, 1, true) then
           roots[#roots + 1] = r
         end
@@ -46,6 +58,21 @@ function M.get_root()
   end
   ---@cast root string
   return root
+end
+
+function M.lsp_get_config(server)
+  local configs = require("lspconfig.configs")
+  return rawget(configs, server)
+end
+
+---@param name string
+function M.opts(name)
+  local plugin = require("lazy.core.config").plugins[name]
+  if not plugin then
+    return {}
+  end
+  local Plugin = require("lazy.core.plugin")
+  return Plugin.values(plugin, "opts", false)
 end
 
 return M

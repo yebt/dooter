@@ -10,23 +10,23 @@ local namespace = vim.api.nvim_create_namespace
 
 -- Is plugin aviable
 local function is_available(plugin)
-	local lazy_config_avail, lazy_config = pcall(require, "lazy.core.config")
-	return lazy_config_avail and lazy_config.plugins[plugin] ~= nil
+  local lazy_config_avail, lazy_config = pcall(require, "lazy.core.config")
+  return lazy_config_avail and lazy_config.plugins[plugin] ~= nil
 end
 
 -- Is a valid buffer
 local function is_valid(bufnr)
-	if not bufnr or bufnr < 1 then
-		return false
-	end
-	return vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buflisted
+  if not bufnr or bufnr < 1 then
+    return false
+  end
+  return vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buflisted
 end
 
 -- Trigger an event
 local function event(ev)
-	vim.schedule(function()
-		vim.api.nvim_exec_autocmds("User", { pattern = "Nu" .. ev })
-	end)
+  vim.schedule(function()
+    vim.api.nvim_exec_autocmds("User", { pattern = "Nu" .. ev })
+  end)
 end
 
 -- Delete match of url
@@ -46,71 +46,69 @@ end
 --   end
 -- end
 
-
 -- Clear the search like vim cool -- NO all cases
 vim.on_key(function(char)
-	if vim.fn.mode() == "n" then
-		local new_hlsearch = vim.tbl_contains({ "<CR>", "n", "N", "*", "#", "?", "/" }, vim.fn.keytrans(char))
-		if vim.opt.hlsearch:get() ~= new_hlsearch then
-			vim.opt.hlsearch = new_hlsearch
-		end
-	end
+  if vim.fn.mode() == "n" then
+    local new_hlsearch = vim.tbl_contains({ "<CR>", "n", "N", "*", "#", "?", "/" }, vim.fn.keytrans(char))
+    if vim.opt.hlsearch:get() ~= new_hlsearch then
+      vim.opt.hlsearch = new_hlsearch
+    end
+  end
 end, namespace("auto_hlsearch"))
 
 -- Update buffer var
 local bufferline_group = augroup("bufferline", { clear = true })
 autocmd({ "BufAdd", "BufEnter", "TabNewEntered" }, {
-	desc = "Update buffers when adding new buffers",
-	group = bufferline_group,
-	callback = function(args)
-		if not vim.t.bufs then
-			vim.t.bufs = {}
-		end
-		local bufs = vim.t.bufs
-		if not vim.tbl_contains(bufs, args.buf) then
-			table.insert(bufs, args.buf)
-			vim.t.bufs = bufs
-		end
-		-- vim.t.bufs = vim.tbl_filter(require("nu.utils.buffer").is_valid, vim.t.bufs)
-		vim.t.bufs = vim.tbl_filter(is_valid, vim.t.bufs)
-		event("BufsUpdated")
-	end,
+  desc = "Update buffers when adding new buffers",
+  group = bufferline_group,
+  callback = function(args)
+    if not vim.t.bufs then
+      vim.t.bufs = {}
+    end
+    local bufs = vim.t.bufs
+    if not vim.tbl_contains(bufs, args.buf) then
+      table.insert(bufs, args.buf)
+      vim.t.bufs = bufs
+    end
+    -- vim.t.bufs = vim.tbl_filter(require("nu.utils.buffer").is_valid, vim.t.bufs)
+    vim.t.bufs = vim.tbl_filter(is_valid, vim.t.bufs)
+    event("BufsUpdated")
+  end,
 })
 
 autocmd("BufDelete", {
-	desc = "Update buffers when deleting buffers",
-	group = bufferline_group,
-	callback = function(args)
-		for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
-			local bufs = vim.t[tab].bufs
-			if bufs then
-				for i, bufnr in ipairs(bufs) do
-					if bufnr == args.buf then
-						table.remove(bufs, i)
-						vim.t[tab].bufs = bufs
-						break
-					end
-				end
-			end
-		end
-		-- vim.t.bufs = vim.tbl_filter(require("nu.utils.buffer").is_valid, vim.t.bufs)
+  desc = "Update buffers when deleting buffers",
+  group = bufferline_group,
+  callback = function(args)
+    for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
+      local bufs = vim.t[tab].bufs
+      if bufs then
+        for i, bufnr in ipairs(bufs) do
+          if bufnr == args.buf then
+            table.remove(bufs, i)
+            vim.t[tab].bufs = bufs
+            break
+          end
+        end
+      end
+    end
+    -- vim.t.bufs = vim.tbl_filter(require("nu.utils.buffer").is_valid, vim.t.bufs)
 
-		vim.t.bufs = vim.tbl_filter(is_valid, vim.t.bufs or {})
-		event("BufsUpdated")
-		vim.cmd.redrawtabline()
-	end,
+    vim.t.bufs = vim.tbl_filter(is_valid, vim.t.bufs or {})
+    event("BufsUpdated")
+    vim.cmd.redrawtabline()
+  end,
 })
 
 -- unlist quick bffs
 autocmd("FileType", {
-	desc = "Unlist quickfist buffers",
-	group = augroup("unlist_quickfist", { clear = true }),
-	pattern = "qf",
-	callback = function()
-		vim.opt_local.buflisted = false
-	end,
+  desc = "Unlist quickfist buffers",
+  group = augroup("unlist_quickfist", { clear = true }),
+  pattern = "qf",
+  callback = function()
+    vim.opt_local.buflisted = false
+  end,
 })
-
 
 -- Ursl Highlighting
 -- autocmd({ "VimEnter", "FileType", "BufEnter", "WinEnter" }, {
@@ -152,57 +150,57 @@ autocmd("BufWinEnter", {
 -- autoview is slow
 -- Alternative if autoview is not active IDK
 autocmd("BufReadPost", {
-	group = augroup("last_loc", { clear = true }),
-	callback = function()
-		local mark = vim.api.nvim_buf_get_mark(0, '"')
-		local lcount = vim.api.nvim_buf_line_count(0)
-		if mark[1] > 0 and mark[1] <= lcount then
-			pcall(vim.api.nvim_win_set_cursor, 0, mark)
-		end
-	end,
+  group = augroup("last_loc", { clear = true }),
+  callback = function()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    local lcount = vim.api.nvim_buf_line_count(0)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
+  end,
 })
 
 -- Fast quit of floats, fix (help, quickfix, dap, etc)
 -- close some filetypes with <q>
 autocmd("FileType", {
-	group = augroup("close_with_q", { clear = true }),
-	pattern = {
-		"PlenaryTestPopup",
-		"help",
-		"lspinfo",
-		"man",
-		"notify",
-		"qf",
-		"spectre_panel",
-		"startuptime",
-		"tsplayground",
-		"neotest-output",
-		"checkhealth",
-		"neotest-summary",
-		"neotest-output-panel",
-	},
-	callback = function(event)
-		vim.bo[event.buf].buflisted = false
-		vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
-	end,
+  group = augroup("close_with_q", { clear = true }),
+  pattern = {
+    "PlenaryTestPopup",
+    "help",
+    "lspinfo",
+    "man",
+    "notify",
+    "qf",
+    "spectre_panel",
+    "startuptime",
+    "tsplayground",
+    "neotest-output",
+    "checkhealth",
+    "neotest-summary",
+    "neotest-output-panel",
+  },
+  callback = function(event)
+    vim.bo[event.buf].buflisted = false
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+  end,
 })
 
 -- Resize on windows
 autocmd({ "VimResized" }, {
-	group = augroup("resize_splits", { clear = true }),
-	callback = function()
-		vim.cmd("tabdo wincmd =")
-	end,
+  group = augroup("resize_splits", { clear = true }),
+  callback = function()
+    vim.cmd("tabdo wincmd =")
+  end,
 })
 
 -- HighLight Yanke Text
 autocmd("TextYankPost", {
-	desc = "Highlight yanked text",
-	group = augroup("highlightyank", { clear = true }),
-	pattern = "*",
-	callback = function()
-		vim.highlight.on_yank()
-	end,
+  desc = "Highlight yanked text",
+  group = augroup("highlightyank", { clear = true }),
+  pattern = "*",
+  callback = function()
+    vim.highlight.on_yank()
+  end,
 })
 
 -- Termianl managment
@@ -215,18 +213,37 @@ autocmd({ "TermOpen" }, {
 autocmd({ "BufEnter", "WinEnter" }, { pattern = { "term://*" }, group = c, command = [[startinsert]] })
 autocmd({ "BufLeave" }, { pattern = { "term://*" }, group = c, command = [[stopinsert]] })
 
+-- Status Bar
+-- Status vars
+autocmd({ "User" }, {
+  pattern = "LazyVimStarted",
+  group = augroup("_startuptime", { clear = true }),
+  callback = function(_)
+    vim.g.lstartuptime = vim.inspect(require("lazy").stats().startuptime)
+  end,
+})
+autocmd({ "LspAttach", "LspDetach" }, {
+  group = augroup("_lsp", { clear = true }),
+  callback = function()
+    local names = {}
+    for _, server in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+      table.insert(names, server.name)
+    end
+    vim.b.lsp_clients = "[" .. table.concat(names, ", ") .. "]"
+    vim.cmd("redrawstatus")
+  end,
+})
 
 -- PLUGINS
 
 if is_available("resession.nvim") then
-	autocmd("VimLeavePre", {
-		desc = "Save session on close",
-		group = augroup("_resession_auto_save", { clear = true }),
-		callback = function()
-			local save = require("resession").save
-			save("Last Session", { notify = false })
-			save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
-		end,
-	})
+  autocmd("VimLeavePre", {
+    desc = "Save session on close",
+    group = augroup("_resession_auto_save", { clear = true }),
+    callback = function()
+      local save = require("resession").save
+      save("Last Session", { notify = false })
+      save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
+    end,
+  })
 end
-
