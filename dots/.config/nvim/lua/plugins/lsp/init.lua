@@ -1,4 +1,5 @@
 return {
+
   -- lspconfig
   {
     "neovim/nvim-lspconfig",
@@ -8,6 +9,10 @@ return {
       { "folke/neodev.nvim", opts = {} },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      {
+        "b0o/schemastore.nvim",
+        priority = 10000,
+      },
       {
         "hrsh7th/cmp-nvim-lsp",
         cond = function()
@@ -49,7 +54,7 @@ return {
       -- LSP Server Settings
       ---@type lspconfig.options
       servers = {
-        jsonls = {},
+
         lua_ls = {
           -- mason = false, -- set to false if you don't want this server to be installed with mason
           settings = {
@@ -75,6 +80,30 @@ return {
         -- end,
         -- Specify * to use this function as a fallback for any server
         -- ["*"] = function(server, opts) end,
+        jsonls = function(_, opts)
+          opts.settings = {
+              json = {
+                schemas = require("schemastore").json.schemas(),
+                validate = { enable = true },
+              },
+          }
+          require("lspconfig").jsonls.setup(opts)
+          return true
+        end,
+        -- yamlls = function(_, opts)
+        --   require("lspconfig").yamlls.setup({
+        --     settings = {
+        --       yaml = {
+        --         schemaStore = {
+        --           -- You must disable built-in schemaStore support if you want to use
+        --           -- this plugin and its advanced options like `ignore`.
+        --           enable = false,
+        --         },
+        --         schemas = require("schemastore").yaml.schemas(),
+        --       },
+        --     },
+        --   })
+        -- end,
       },
     },
     ---@param opts PluginLspOpts
@@ -108,6 +137,19 @@ return {
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
       local servers = opts.servers
+      -- local jsonls = {
+      --   settings = {
+      --     json = {
+      --       schemas = require("schemastore").json.schemas(),
+      --       validate = { enable = true },
+      --     },
+      --   },
+      -- }
+      -- servers.jsonls = jsonls
+      -- servers.lua_ls = nil
+      --servers:append(jsonls)
+      -- vim.notify(vim.inspect(servers))
+
       local capabilities = vim.tbl_deep_extend(
         "force",
         {},
