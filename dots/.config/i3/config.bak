@@ -4,9 +4,7 @@
 set $mod Mod4
 set $refresh_i3status killall -SIGUSR1 i3status
 set $term kitty
-# set $locker i3lock -f -e  -b -c 282828 -n 
-# betterlockscreen -u wallhaven-dp3lzm.jpg  --fx dim,pixel,blur,dimblur
-set $locker betterlockscreen  -l dimblur --off 2 --color #282828
+set $locker i3lock -f -e  -b -c 282828 -n  
 set $notificate notify-send
 set $refresh_i3status killall -SIGUSR1 i3status
 set $compositor compton
@@ -169,7 +167,6 @@ bindsym $mod+Shift+q kill
 # start dmenu (a program launcher)
 #bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym $mod+d exec --no-startup-id ulauncher-toggle
-bindsym $mod+shift+d exec --no-startup-id rofi -show drun
 # A more modern dmenu replacement is rofi:
 # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
 # There also is i3-dmenu-desktop which only displays applications shipping a
@@ -322,76 +319,14 @@ mode $modePowerMenu {
 }
 bindsym $mod+shift+e mode $modePowerMenu
 
-# mod border
-set $mbordernormal "Borer Normal (0...4)"
-mode $mbordernormal{
-    bindsym 0 border normal 0 ;mode "default"
-    bindsym 1 border normal 1 ;mode "default"
-    bindsym 2 border normal 2 ;mode "default"
-    bindsym 3 border normal 3 ;mode "default"
-    bindsym 4 border normal 4 ;mode "default"
-    bindsym Escape mode "default"
-    bindsym Return mode "default"
-}
-
-set $mborderpix "Border Pixel (0...4)"
-mode $mborderpix{
-    bindsym 0 border pixel 0 ;mode "default"
-    bindsym 1 border pixel 1 ;mode "default"
-    bindsym 2 border pixel 2 ;mode "default"
-    bindsym 3 border pixel 3 ;mode "default"
-    bindsym 4 border pixel 4 ;mode "default"
-    bindsym Escape mode "default"
-    bindsym Return mode "default"
-}
-
-set $modeBorders "Borders 0,n,p,t"
-mode $modeBorders {
-    bindsym 0 border none; mode "default"
-    bindsym n mode $mbordernormal
-    bindsym p mode $mborderpix
-    bindsym t border toggle; mode "default"
-    bindsym Escape mode "default"
-    bindsym Return mode "default"
-}
-bindsym $mod+b mode $modeBorders
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-     #    status_command i3status
-     #    i3bar_command i3bar --transparency
-     #    strip_workspace_numbers yes
-     #    position top
-     #    padding 1
-    	# mode dock
-     #    #hidden_state hide
-     #    status_command i3status
-        #workspace_min_width 20
-    status_command i3status
-    # mode dock
-    mode dock
-    hidden_state hide
-    position bottom
-    padding 0px
-    tray_output primary
-    tray_padding 2
-    font pango:JetBrainsMono NF 8
-    separator_symbol ":|:"
-    workspace_buttons yes
-
-
-    colors {
-        background #282A36
-            statusline #F8F8F2
-            separator  #44475A
-
-            focused_workspace  #44475A #44475A #F8F8F2
-            active_workspace   #282A36 #44475A #F8F8F2
-            inactive_workspace #282A36 #282A36 #BFBFBF
-            urgent_workspace   #FF5555 #FF5555 #F8F8F2
-            binding_mode       #FF5555 #FF5555 #F8F8F2
-    }
+        status_command i3status
+    	mode hide
+        hidden_state hide
+        status_command i3status
 }
 
 
@@ -412,27 +347,14 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 
 exec --no-startup-id setxkbmap latam,us
-#off beep
-exec --no-startup-id xet b off
-# enable tap touchpad
-# xinput  | grep Touchpad 
-# ⎜   ↳ Elan Touchpad                           	id=10	[slave  pointer  (2)]
-exec xinput set-prop "Elan Touchpad" "libinput Tapping Enabled" 1
-
-
-# /usr/libexec/polkit-gnome-authentication-agent-1
-#exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id lxpolkit
 
 
 exec --no-startup-id /usr/lib/gsd-xsettings
 #exec --no-startup-id /usr/lib/gsd-xsettings
 #exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
-exec_always --no-startup-id ~/.config/i3/scripts/i3-battery.sh 
-
 exec_always --no-startup-id nitrogen --restore
-exec --no-startup-id autorandr
+exec autorandr
 
 exec_always --no-startup-id killall picom && picom || picom
 
