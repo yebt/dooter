@@ -11,6 +11,9 @@ sudo dnf install \
 	xrandr \
 	arandr \
 	make \
+	light \
+	redshift \
+	redshift-gtk \
 	-y
 # Better locker
 wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | bash -s user
