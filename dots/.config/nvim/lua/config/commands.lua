@@ -31,11 +31,43 @@ local ncsc = vim.api.nvim_create_user_command
 -- Runner
 ---------------------------------------------
 
--- Crear una terminal flotante y enviar un comando
-local function create_floating_terminal(command)
+--
+local function create_floating_window()
   local buf = vim.api.nvim_create_buf(false, true)
   local porcent_h = 60
   local porcent_w = 60
+  -- Obtener las dimensiones de la ventana actual
+  local width = vim.api.nvim_get_option("columns")
+  local height = vim.api.nvim_get_option("lines")
+  -- Calcular el tamaño de la ventana flotante
+  local win_height = math.ceil(height * porcent_h / 100 - 4)
+  local win_width = math.ceil(width * porcent_w / 100)
+  -- Calcular la posición de inicio de la ventana
+  local row = math.ceil((height - win_height) / 2 - 1)
+  local col = math.ceil((width - win_width) / 2)
+  -- Configurar las opciones de la ventana
+  local opts = {
+    relative = "editor",
+    width = win_width,
+    height = win_height,
+    row = row,
+    col = col,
+    style = "minimal",
+    border = "single",
+    title = "RUNN",
+    focusable = true,
+  }
+  -- Crear la ventana con el buffer adjunto
+  local win = vim.api.nvim_open_win(buf, true, opts)
+
+  return buf, win
+end
+
+-- Crear una terminal flotante y enviar un comando
+local function create_floating_terminal(command)
+  local buf = vim.api.nvim_create_buf(false, true)
+  local porcent_h = 70
+  local porcent_w = 80
   -- get the current window dimensions
   local width = vim.api.nvim_get_option("columns")
   local height = vim.api.nvim_get_option("lines")
@@ -64,16 +96,22 @@ local function create_floating_terminal(command)
   -- vim.api.nvim_win_set_option(win, "winhighlight", "Normal:Normal")
 
   local term_job_id = vim.fn.termopen(command, {
-    on_exit = function(_, code)
+    on_exit = function(a, code)
       -- vim.api.nvim_win_close(win, true)
       -- vim.api.nvim_buf_delete(buf, {force = true})
     end,
     stdout_buffered = true,
     stderr_buffered = true,
   })
-  --
-  vim.api.nvim_set_current_win(win)
-  vim.cmd("startinsert")
+  -- -- --
+  -- vim.api.nvim_set_current_win(win)
+  -- vim.cmd("startinsert")
+  vim.keymap.set("t", "<M-c>", function()
+    vim.fn.jobstop(term_job_id)
+    vim.api.nvim_win_close(win, true)
+    vim.api.nvim_buf_delete(buf, {force = true})
+  end, {})
+  -- vim.cmd("terminal " .. command)
 
   -- return term_job_id
 end
@@ -84,7 +122,7 @@ end
 
 -- Configured runners
 local configured_runners = {
-  python = "python %",
+  python = "python " .. vim.fn.expand("%"),
   lua = {
     "ls",
     -- "exa",
@@ -111,7 +149,8 @@ local function runRunner()
       openSelector(cmmd, function(choice)
         if choice then
           -- vim.cmd(":!" .. choice)
-          create_floating_terminal(choice)
+          create_floating_window(choice)
+          -- create_floating_terminal(choice)
         end
       end)
     else
@@ -123,6 +162,9 @@ local function runRunner()
 end
 
 --
+ncsc("Run", function()
+  runRunner()
+end, {})
 ncsc("Run", function()
   runRunner()
 end, {})
