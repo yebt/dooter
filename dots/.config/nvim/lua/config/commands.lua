@@ -91,25 +91,29 @@ local function create_floating_terminal(command)
   }
   -- and finally create it with buffer attached
   local win = vim.api.nvim_open_win(buf, true, opts)
-  -- vim.api.nvim_win_set_option(win, "winhl", "Normal:Normal")
-  -- vim.api.nvim_win_set_option(win, "winblend", 0)
-  -- vim.api.nvim_win_set_option(win, "winhighlight", "Normal:Normal")
+  vim.api.nvim_buf_set_option(buf, "filetype", "runner")
+  vim.api.nvim_win_set_option(win, "winhl", "Normal:Normal")
+  vim.api.nvim_win_set_option(win, "winblend", 0)
+  vim.api.nvim_win_set_option(win, "winhighlight", "Normal:Normal")
+  vim.api.nvim_set_current_win(win)
+  vim.cmd("startinsert")
 
   local term_job_id = vim.fn.termopen(command, {
-    on_exit = function(a, code)
-      -- vim.api.nvim_win_close(win, true)
-      -- vim.api.nvim_buf_delete(buf, {force = true})
-    end,
+    -- on_exit = function(a, code)
+    --   -- vim.api.nvim_win_close(win, true)
+    --   -- vim.api.nvim_buf_delete(buf, {force = true})
+    -- end,
     stdout_buffered = true,
     stderr_buffered = true,
   })
   -- -- --
-  -- vim.api.nvim_set_current_win(win)
-  -- vim.cmd("startinsert")
-  vim.keymap.set("t", "<M-c>", function()
+
+  vim.keymap.set({"n","t"}, "<M-c>", function()
+  end, {buffer = buf})
+  vim.keymap.set({"t","n"}, "<M-d>", function()
     vim.fn.jobstop(term_job_id)
     vim.api.nvim_win_close(win, true)
-    vim.api.nvim_buf_delete(buf, {force = true})
+    vim.api.nvim_buf_delete(buf, { force = true })
   end, {})
   -- vim.cmd("terminal " .. command)
 

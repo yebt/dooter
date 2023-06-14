@@ -178,6 +178,7 @@ autocmd("FileType", {
     "checkhealth",
     "neotest-summary",
     "neotest-output-panel",
+    "runner",
   },
   callback = function(event)
     vim.bo[event.buf].buflisted = false

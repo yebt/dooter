@@ -11,4 +11,4 @@ export PATH=~/.local/bin:$PATH
 export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/podman/podman.sock # activate with system
 
 # in us mode key
-xmodmap ~/.Xmodmap
+#xmodmap ~/.Xmodmap
