@@ -57,9 +57,10 @@ return {
         completion = {
           completeopt = "menu,menuone,noinsert,noselect",
         },
-        -- confirm = {
-        --   behavior = cmp.ConfirmBehavior.Insert,
-        -- },
+        confirm = {
+          -- behavior = cmp.ConfirmBehavior.Insert,
+          behavior = cmp.ConfirmBehavior.Replace,
+        },
         snippet = {
           expand = function(args)
             require("luasnip").lsp_expand(args.body)
