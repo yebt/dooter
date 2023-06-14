@@ -82,10 +82,10 @@ return {
         -- ["*"] = function(server, opts) end,
         jsonls = function(_, opts)
           opts.settings = {
-              json = {
-                schemas = require("schemastore").json.schemas(),
-                validate = { enable = true },
-              },
+            json = {
+              schemas = require("schemastore").json.schemas(),
+              validate = { enable = true },
+            },
           }
           require("lspconfig").jsonls.setup(opts)
           return true
@@ -219,11 +219,17 @@ return {
       return {
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
         sources = {
-          nls.builtins.formatting.fish_indent,
+          -- nls.builtins.diagnostics.cspell,
+          -- nls.builtins.code_actions.cspell,
+
           nls.builtins.diagnostics.fish,
-          nls.builtins.formatting.stylua,
+          nls.builtins.formatting.fish_indent,
           nls.builtins.formatting.shfmt,
-          -- nls.builtins.diagnostics.flake8,
+
+          nls.builtins.diagnostics.flake8,
+          nls.builtins.formatting.autopep8,
+
+          nls.builtins.formatting.stylua,
         },
       }
     end,

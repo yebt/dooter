@@ -411,9 +411,9 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
-exec --no-startup-id setxkbmap latam,us
+# exec --no-startup-id setxkbmap latam,us
 #off beep
-exec --no-startup-id xet b off
+# exec --no-startup-id xet b off
 # enable tap touchpad
 # xinput  | grep Touchpad 
 # ⎜   ↳ Elan Touchpad                           	id=10	[slave  pointer  (2)]
