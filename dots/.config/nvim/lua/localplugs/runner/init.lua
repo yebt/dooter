@@ -118,7 +118,7 @@ function M.get_run_config()
     -- las configuraciones pensadas para singlefiles
 
     for _, run_configs in pairs(M.runners) do
-      returned_config = ger_cf(run_configs)
+      returned_config = ger_cf(run_configs,true)
       if returned_config then
         break
       end
