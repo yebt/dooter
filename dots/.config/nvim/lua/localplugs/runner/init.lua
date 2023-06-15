@@ -45,6 +45,48 @@ function path_exists(P)
   return vim.fn.glob(path) ~= ""
 end
 
+---- get the config of config if exist
+-- @return table | nil of config options
+function get_cf(run_configs, skip_singlefile)
+  skip_singlefile = skip_singlefile or false
+
+  if run_configs then
+    -- dinamic searched files
+    local dinamyc_sf = {}
+    -- como un filetype puede tener asociado multiples config
+    -- buscar
+    for tag, single_config in pairs(run_configs) do
+      -- skip if i a single file config
+      if skip_singlefile and not single_config.structs then
+        goto continue
+      end
+
+      -- search on struct
+      -- como struct puede ser varios, buscar cual struct encuentra primero
+      for _, single_struct in pairs(single_config.structs) do
+        -- search files
+        local ok_config = true
+        for _, single_file in pairs(single_struct) do
+          if not dinamyc_sf[single_file] and not path_exists(single_file) then
+            ok_config = false
+            break
+          end
+          dinamyc_sf[single_file] = true
+        end
+        -- Ok all files exist set config
+        if ok_config then
+          single_config.tag = tag -- use tag to show
+          vim.g.runner_config = single_config
+          return single_config
+        end
+      end
+
+      ::continue::
+    end
+  end
+  return nil
+end
+
 -- Función para obtener la configuración de ejecución
 function M.get_run_config()
   -- Primero, verificamos la variable global
@@ -63,74 +105,27 @@ function M.get_run_config()
 
   -- Si no hay configuración almacenada, determinamos la correcta basándonos en M.runners
   --
+  local returned_config = nil
   local filetype = vim.bo.filetype
   -- puede que no halla abierto ningun archivo aún
   if filetype then
     local run_configs = M.runners[filetype]
-    if run_configs then
-      -- dinamic searched files
-      local dinamyc_sf = {}
-      -- como un filetype puede tener asociado multiples config
-      -- buscar
-      for tag, single_config in pairs(run_configs) do
-        -- search on struct
-        -- como struct puede ser varios, buscar cual struct encuentra primero
-        for _, single_struct in pairs(single_config.structs) do
-          -- search files
-          local ok_config = true
-          for _, single_file in pairs(single_struct) do
-            if not dinamyc_sf[single_file] and not path_exists(single_file) then
-              ok_config = false
-              break
-            end
-            dinamyc_sf[single_file] = true
-          end
-          -- Ok all files exist set config
-          if ok_config then
-            single_config.tag = tag -- use tag to show
-            vim.g.runner_config = single_config
-            return single_config
-          end
-        end
-      end
-    end
+    returned_config = get_cf(run_configs)
   else
     -- en caso de que no exista archivo abierto, buscar en todo
     -- se ignoran los que no poseen el atributo struct, porque
     -- como no tenemos un archivo en que basarnos, no es posible asumir
     -- las configuraciones pensadas para singlefiles
+
+    for _, run_configs in pairs(M.runners) do
+      returned_config = ger_cf(run_configs)
+      if returned_config then
+        break
+      end
+    end
   end
 
-  return nil
-  ----
-
-  -- local filetype = M.detect_filetype()
-
-  -- if M.runners[filetype] ~= nil then
-  --   local run_config = M.runners[filetype]
-
-  --   -- Verificamos si la estructura de directorios coincide
-  --   for _, struct in ipairs(run_config.struct) do
-  --     local handle = io.popen("ls")
-  --     local result = handle:read("*a")
-  --     handle:close()
-
-  --     -- Verificamos si todos los archivos/carpetas de la estructura existen
-  --     local struct_exists = true
-  --     for _, file_or_folder in ipairs(struct) do
-  --       if not string.match(result, file_or_folder) then
-  --         struct_exists = false
-  --         break
-  --       end
-  --     end
-
-  --     if struct_exists then
-  --       -- Almacenamos la configuración en la variable global
-  --       vim.g.runner_config = run_config
-  --       return run_config
-  --     end
-  --   end
-  -- end
+  return returned_config
 end
 
 return M
