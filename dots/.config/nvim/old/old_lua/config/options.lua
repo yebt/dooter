@@ -1,34 +1,50 @@
 local opt = vim.opt
-
-----
+opt.fillchars = {
+	stl = " ", -- ' ' or '^'	statusline of the current window
+	stlnc = "=", -- ' ' or '='	statusline of the non-current windows
+	-- wbr		= '', -- ' '		window bar
+	horiz = "─", -- '─' or '-'	horizontal separators |:split|
+	horizup = "┴", -- '┴' or '-'	upwards facing horizontal separator
+	horizdown = "┬", -- '┬' or '-'	downwards facing horizontal separator
+	vert = "│", -- '│' or '|'	vertical separators |:vsplit|
+	vertleft = "┤", -- '┤' or '|'	left facing vertical separator
+	vertright = "├", -- '├' or '|'	right facing vertical separator
+	verthoriz = "┼", -- '┼' or '+'	overlapping vertical and horizontal
+	--       	      -- 		separator
+	fold = " ", -- '·' or '-'	filling 'foldtext'
+	-- foldopen = "", -- '-'		mark the beginning of a fold
+	-- foldclose = "", -- '+'		show a closed fold
+	foldsep = "│", -- '│' or '|'      open fold middle marker
+	diff = "-", -- '-'		deleted lines of the 'diff' option
+	msgsep = " ", -- ' '		message separator 'display'
+	--eob		= '', -- '~'		empty lines at the end of a buffer
+	-- lastline	= '' -- '@'		'display' contains lastline/truncate
+}
 
 opt.compatible = false
-
--- wrap
--- opt.wrap = false
+--
+opt.wrap = true
 opt.showbreak = "↳"
 opt.linebreak = true
 opt.breakindent = true
 opt.breakindentopt = "min:40,shift:0,sbr"
 opt.copyindent = true
 opt.preserveindent = true
--- indent
+--
 opt.expandtab = true
 opt.shiftwidth = 4
 opt.tabstop = 4
 opt.softtabstop = 4
 opt.smartindent = true
--- cursor
+--
 opt.cursorline = true
 --opt.guicursor = "a:block"
 --
 opt.concealcursor = "nc"
-opt.conceallevel = 2
---
+opt.conceallevel = 1
 --
 opt.nu = true
 opt.rnu = true
---
 --
 --opt.cmdheight = 1
 --opt.cmdheight = 0
@@ -38,7 +54,10 @@ opt.confirm = true
 opt.clipboard = "unnamed"
 --
 opt.viewoptions = "folds,cursor"
---
+-- {
+--   folds = true,
+--   cursor = true,
+-- }
 --
 opt.foldenable = true
 opt.foldlevel = 99
@@ -131,3 +150,4 @@ vim.g.netrw_keepdir = 0
 -- vim.g.netrw_special_syntax = 1
 -- vim.g.netrw_altv = 1
 -- vim.g.netrw_fastbrowse = 2
+

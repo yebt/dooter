@@ -1,5 +1,5 @@
 -- Load config
 vim.g.mapleader = " "
 require("config")
--- Load lazy
-require("lazy")
+-- Local plugins
+require("localplugs")
