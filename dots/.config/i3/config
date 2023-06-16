@@ -33,7 +33,7 @@ set $ws10 "10: "
 
 #: APPARENCE {{{
 # font pango:DejaVu Sans Mono 8
-font pango:JetBrainsMono NF 8
+font pango:JetBrainsMono NF 9
 # floating_minimum_size 75 x 75
 default_orientation horizontal
 default_floating_border pixel 1
@@ -376,22 +376,22 @@ bar {
     padding 0px
     tray_output primary
     tray_padding 2
-    font pango:JetBrainsMono NF 8
+    font pango:JetBrainsMono NF 9
     separator_symbol ":|:"
     workspace_buttons yes
 
 
-    colors {
-        background #282A36
-            statusline #F8F8F2
-            separator  #44475A
+    # colors {
+    #     background #282A36
+    #         statusline #F8F8F2
+    #         separator  #44475A
 
-            focused_workspace  #44475A #44475A #F8F8F2
-            active_workspace   #282A36 #44475A #F8F8F2
-            inactive_workspace #282A36 #282A36 #BFBFBF
-            urgent_workspace   #FF5555 #FF5555 #F8F8F2
-            binding_mode       #FF5555 #FF5555 #F8F8F2
-    }
+    #         focused_workspace  #44475A #44475A #F8F8F2
+    #         active_workspace   #282A36 #44475A #F8F8F2
+    #         inactive_workspace #282A36 #282A36 #BFBFBF
+    #         urgent_workspace   #FF5555 #FF5555 #F8F8F2
+    #         binding_mode       #FF5555 #FF5555 #F8F8F2
+    # }
 }
 
 
