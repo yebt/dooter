@@ -4,4 +4,4 @@ require("config.commands")
 require("config.autocmds")
 require("config.keymaps")
 
-require("config.lazyinit")
+--require("config.lazyinit")

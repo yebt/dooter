@@ -1,45 +1,47 @@
 local M = {}
 
-M.runners = {
-  -- primer nivel contiene el filetype que dispara las posibles opciones
-  php = {
-    -- Lista de posibles opciones o configuraciones, donde el tag permite distinguir entr
-    -- el tipo de proyecto, este podria ser como node, laravel, ["laravel 7"], etc
-    tag = {
-      structs = {
-        -- No es obligatorio, en caso de no existir significa que es un single file
-        -- listado de archivos que deben de existir para que se acepte esta configuración
-        -- del runer
-        -- si están bajo la misma lista, deben existir todos para que se acepte la configuración
-        -- { "package.json" } -- solo necesita que exista este archivo en el root para aceptar
-        -- { "composer.json", "artisan" } -- necesita que existan ambos
-        -- { "composer.json", "artisan" }, { "composer.json" } -- puede existir cualquiera de los 2 conjuntos para cimplir
-        -- { "src/", "app/env/" }, -- aqui require que existan esas 2 carpetas
-      },
-      --- peude ser una lista o una función que retorna una lsita
-      -- en caso de ser una función, se ejecuta para calcular los cmds a usar
-      cmds = {
-        -- No es opcional
-        -- lista de comandos en struing que se pueden seleccionar al
-        -- momento de querer correr el proyecto o ejecutar el archivo
-      },
-      execs = {
-        -- son comandos adicionales que se pueden consultar para ejecutar acciones adicionales
-        {
-          instuctions = { "" }, -- instruncciones a ejecutar
-          t = "", -- cmd | nvim
-          -- si es cmd, abre una terminal flotante para ejecutar el parametro instuctions
-          -- si es nvim los ejecuta en nvim como si se ejecutara un registro gravado o macro
-        },
-      },
-    },
-  },
-}
+M.runners = require("localplugs.runner.runners") or {}
+
+-- M.runners = {
+--   -- primer nivel contiene el filetype que dispara las posibles opciones
+--   php = {
+--     -- Lista de posibles opciones o configuraciones, donde el tag permite distinguir entr
+--     -- el tipo de proyecto, este podria ser como node, laravel, ["laravel 7"], etc
+--     tag = {
+--       structs = {
+--         -- No es obligatorio, en caso de no existir significa que es un single file
+--         -- listado de archivos que deben de existir para que se acepte esta configuración
+--         -- del runer
+--         -- si están bajo la misma lista, deben existir todos para que se acepte la configuración
+--         -- { "package.json" } -- solo necesita que exista este archivo en el root para aceptar
+--         -- { "composer.json", "artisan" } -- necesita que existan ambos
+--         -- { "composer.json", "artisan" }, { "composer.json" } -- puede existir cualquiera de los 2 conjuntos para cimplir
+--         -- { "src/", "app/env/" }, -- aqui require que existan esas 2 carpetas
+--       },
+--       --- peude ser una lista o una función que retorna una lsita
+--       -- en caso de ser una función, se ejecuta para calcular los cmds a usar
+--       cmds = {
+--         -- No es opcional
+--         -- lista de comandos en struing que se pueden seleccionar al
+--         -- momento de querer correr el proyecto o ejecutar el archivo
+--       },
+--       execs = {
+--         -- son comandos adicionales que se pueden consultar para ejecutar acciones adicionales
+--         {
+--           instuctions = { "" }, -- instruncciones a ejecutar
+--           t = "", -- cmd | nvim
+--           -- si es cmd, abre una terminal flotante para ejecutar el parametro instuctions
+--           -- si es nvim los ejecuta en nvim como si se ejecutara un registro gravado o macro
+--         },
+--       },
+--     },
+--   },
+-- }
 
 --- does a path exist?.
 -- @string P A file path
 -- @return the file path if it exists, nil otherwise
-function path_exists(P)
+function path_exists(path)
   -- local stat = vim.loop.fs_stat(path)
   -- return stat and stat.type ~= nil
   return vim.fn.glob(path) ~= ""
@@ -73,9 +75,12 @@ function get_cf(run_configs, skip_singlefile)
           end
           dinamyc_sf[single_file] = true
         end
+
         -- Ok all files exist set config
         if ok_config then
           single_config.tag = tag -- use tag to show
+          -- if single_config.cmds then
+          -- end
           vim.g.runner_config = single_config
           return single_config
         end
@@ -104,11 +109,11 @@ function M.get_run_config()
   end
 
   -- Si no hay configuración almacenada, determinamos la correcta basándonos en M.runners
-  --
   local returned_config = nil
   local filetype = vim.bo.filetype
+
   -- puede que no halla abierto ningun archivo aún
-  if filetype then
+  if filetype and filetype ~= "" then
     local run_configs = M.runners[filetype]
     returned_config = get_cf(run_configs)
   else
@@ -117,8 +122,9 @@ function M.get_run_config()
     -- como no tenemos un archivo en que basarnos, no es posible asumir
     -- las configuraciones pensadas para singlefiles
 
-    for _, run_configs in pairs(M.runners) do
-      returned_config = ger_cf(run_configs,true)
+    for k, run_configs in pairs(M.runners) do
+      returned_config = get_cf(run_configs, true)
+
       if returned_config then
         break
       end
@@ -127,5 +133,48 @@ function M.get_run_config()
 
   return returned_config
 end
+
+---
+function M.run()
+  local found_runner = M.get_run_config()
+  if found_runner then
+    local cmds = found_runner.cmds
+    -- check if function
+    if type(found_runner.cmds) == "function" then
+      cmds = found_runner.cmds()
+      -- overwrite
+      if found_runner.ovcmds then
+        found_runner.cmds = cmds
+        vim.g.runner_config = found_runner
+      end
+    end
+    -- Process options
+    local options = {}
+    for single_command in pairs(cmds) do
+      options[#options + 1] = type(single_command) == "table" and next(single_command) or single_command
+    end
+    -- Show options
+    vim.ui.select(options, {
+      prompt = "Runners [" .. found_runner.tag .. "]",
+      format_item = function(item)
+        return "» " .. item
+      end,
+    }, function(choice, indx)
+      if choice then
+        cmnd_to_execute = cmds[choice]
+        vim.notify( vim.inspect( cmnd_to_execute ) )
+      end
+    end)
+    -- vim.notify(vim.inspect(found_runner))
+  else
+    vim.notify("No runner found", vim.log.levels.WARN)
+  end
+end
+---
+
+local ncsc = vim.api.nvim_create_user_command
+
+ncsc("Runnr", M.run, {})
+vim.keymap.set("n", "<F12>", M.run)
 
 return M
