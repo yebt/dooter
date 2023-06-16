@@ -1,0 +1,90 @@
+# vim: filetype=config
+general {
+        output_format = "i3bar"
+        colors = true
+        interval = 5
+}
+
+
+order += "battery 0 "
+order += "memory"
+order += "wireless wlp3s0"
+order += "ethernet eno1"
+order += "tztime bogota"
+
+
+wireless wlp3s0 {
+        # format_up = "W: (%quality at %essid, %bitrate) %ip"
+        format_up = "W: %ip"
+        # format_down = "W: down"
+        format_down = ""
+}
+
+ethernet eno1 {
+        # format_up = "E: %ip (%speed)"
+        format_up = "E: %ip"
+        # format_down = "E: down"
+        format_down = ""
+}
+
+battery 0 {
+        # format = "%status %percentage %remaining %emptytime"
+        format = "%status %percentage"
+        format_down = "No battery"
+        # status_chr = "⚡ CHR"
+        status_chr = "C  "
+        # status_bat = "🔋 BAT"
+        status_bat = "D  "
+        status_unk = "? UNK"
+        status_full = "F "
+        path = "/sys/class/power_supply/BAT%d/uevent"
+        low_threshold = 10
+}
+
+run_watch DHCP {
+        pidfile = "/var/run/dhclient*.pid"
+}
+
+run_watch VPNC {
+        # file containing the PID of a vpnc process
+        pidfile = "/var/run/vpnc/pid"
+}
+
+path_exists VPN {
+        # path exists when a VPN tunnel launched by nmcli/nm-applet is active
+        path = "/proc/sys/net/ipv4/conf/tun0"
+}
+
+tztime bogota {
+        format = "%Y-%m-%d %H:%M"
+        # hide_if_equals_localtime = true
+        timezone = "America/Bogota"
+}
+
+tztime berlin {
+        format = "%Y-%m-%d %H:%M:%S %Z"
+        timezone = "Europe/Berlin"
+}
+
+load {
+        format = "%5min"
+}
+
+cpu_temperature 0 {
+        format = "T: %degrees °C"
+        path = "/sys/devices/platform/coretemp.0/temp1_input"
+}
+
+memory {
+        format = "%used"
+        threshold_degraded = "10%"
+        format_degraded = "MEMORY: %free"
+}
+
+disk "/" {
+        format = "%free"
+}
+
+read_file uptime {
+        path = "/proc/uptime"
+}

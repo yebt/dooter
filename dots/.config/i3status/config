@@ -1,42 +1,48 @@
 # vim: filetype=config
+
 general {
+        #output_format = "dzen2"
         output_format = "i3bar"
         colors = true
         interval = 5
 }
 
-
+# order += "ipv6"
+# order += "disk /"
+# order += "run_watch DHCP"
+# order += "run_watch VPNC"
+# order += "path_exists VPN"
+order += "wireless wlp2s0"
+# order += "ethernet lo"
+order += "battery 0"
+# order += "cpu_temperature 0"
+order += "cpu_usage"
 order += "memory"
-order += "wireless wlp3s0"
-order += "ethernet eno1"
-order += "tztime bogota"
-order += "battery 0 "
+# order += "load"
+#order += "tztime local"
+order += "time"
+# order += "tztime berlin"
 
-
-wireless wlp3s0 {
-        # format_up = "W: (%quality at %essid, %bitrate) %ip"
-        format_up = "W: %ip"
-        # format_down = "W: down"
-        format_down = ""
+# wlan0 
+wireless wlp2s0 {
+        #format_up = "W: (%quality at %essid, %bitrate) %ip"
+        format_up = "%ip"
+        format_down = "W: down"
 }
-
-ethernet eno1 {
-        # format_up = "E: %ip (%speed)"
-        format_up = "E: %ip"
-        # format_down = "E: down"
-        format_down = ""
+# eth0
+ethernet lo {
+        format_up = "E: %ip (%speed)"
+        format_down = "E: down"
 }
 
 battery 0 {
-        # format = "%status %percentage %remaining %emptytime"
-        format = "%status %percentage"
+        #format = "%status %percentage %remaining %emptytime"
+        format = "%status %percentage  "
         format_down = "No battery"
-        # status_chr = "⚡ CHR"
-        status_chr = "C  "
-        # status_bat = "🔋 BAT"
-        status_bat = "D  "
-        status_unk = "? UNK"
-        status_full = "F "
+        status_chr = "C"
+        status_bat = "B"
+        status_unk = "U"
+        status_full = "F"
         path = "/sys/class/power_supply/BAT%d/uevent"
         low_threshold = 10
 }
@@ -55,10 +61,9 @@ path_exists VPN {
         path = "/proc/sys/net/ipv4/conf/tun0"
 }
 
-tztime bogota {
-        format = "%Y-%m-%d %H:%M"
-        # hide_if_equals_localtime = true
-        timezone = "America/Bogota"
+tztime local {
+        format = "%Y-%m-%d %H:%M:%S"
+        hide_if_equals_localtime = true
 }
 
 tztime berlin {
@@ -75,8 +80,13 @@ cpu_temperature 0 {
         path = "/sys/devices/platform/coretemp.0/temp1_input"
 }
 
+cpu_usage {
+    format = "CPU %usage"
+}
+
 memory {
-        format = "%used"
+        #format = "%used"
+        format = "MEM %percentage_used"
         threshold_degraded = "10%"
         format_degraded = "MEMORY: %free"
 }
@@ -87,4 +97,8 @@ disk "/" {
 
 read_file uptime {
         path = "/proc/uptime"
+}
+
+time {
+    format = "%Y-%m-%d %H:%M:%S"
 }
