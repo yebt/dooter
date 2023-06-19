@@ -8,6 +8,7 @@ then
     ~/.cache/nvim \
     ~/.local/share/nvim \
     ~/.local/state/nvim \
+    ~/.config/nvim/lazy-lock.json \
   )
 
   for i in "${cdirs[@]}"

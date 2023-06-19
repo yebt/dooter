@@ -104,5 +104,4 @@ end, { silent = true, expr = true, desc = "Add surround" })
 map("n", "\\", ":Lex %:p:h <CR>", {silent = true})
 --map("n", "\\", ":Vex<CR>", {silent = true})
 
--- Maos
 

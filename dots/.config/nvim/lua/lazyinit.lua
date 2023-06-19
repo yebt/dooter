@@ -28,7 +28,7 @@ require("lazy").setup({
     path = "~/.config/nvim/localplugins",
     --path = vim.fn.stdpath("config") .. "/",
     ---@type string[] plugins that match these patterns will use your local versions instead of being fetched from GitHub
-    patterns = {}, -- For example {"folke"}
+    patterns = {"local"}, -- For example {"folke"}
     fallback = false, -- Fallback to git when local plugin doesn't exist
   },
   install = { colorscheme = { "habamax" } },
@@ -76,3 +76,6 @@ require("lazy").setup({
     enabled = false,
   },
 })
+
+--- MAPS
+vim.keymap.set("n", "<C-l>", ":Lazy <CR>", {silent = true})
