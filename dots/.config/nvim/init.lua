@@ -3,5 +3,7 @@ vim.g.mapleader = " "
 require("config")
 -- Lazi
 require ("lazyinit")
+-- Extras
+require("extras")
 -- Local plugins
 -- require("localplugs")

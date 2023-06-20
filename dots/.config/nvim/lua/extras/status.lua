@@ -48,15 +48,39 @@ function _G.append_v(v, chrl, chrr, vl)
   end
 end
 
-function _G.copilotst_v()
+function _G.copilotst()
   --  Copilot = "   ",
+  local ok, cpltapi = pcall(require, "copilot.api")
+  if not ok then
+    return ""
+  end
+  local scolors = {
+    [""] = "%2*",
+    ["Normal"] = "%2*",
+    ["Warning"] = "%3*",
+    ["InProgress"] = "%4*",
+  }
+  local icon = "   "
+  local status = require("copilot.api").status.data
+  ----vim.notify(vim.inspect(status))
+  return scolors[status.status] .. icon .. (status.message or "") .. "%0*"
 end
 
 --
 
 local constant_hl = vim.api.nvim_get_hl(0, { name = "Constant" })
+local diagnosticwarn_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn" })
+local diagnostierror_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticError" })
+local special_hl = vim.api.nvim_get_hl(0, { name = "Special" })
 local statusline_hl = vim.api.nvim_get_hl(0, { name = "StatusLine" })
+
 vim.api.nvim_set_hl(0, "User1", { bg = statusline_hl.bg, fg = constant_hl.fg })
+-- vim.api.nvim_set_hl(0, "User2", { bg = statusline_hl.bg, fg = special_hl.fg })
+-- vim.api.nvim_set_hl(0, "User3", { bg = statusline_hl.bg, fg = diagnostierror_hl.fg })
+-- vim.api.nvim_set_hl(0, "User4", { bg = statusline_hl.bg, fg = diagnosticwarn_hl.fg })
+vim.api.nvim_set_hl(0, "User2", { fg = statusline_hl.bg, bg = special_hl.fg, bold = true})
+vim.api.nvim_set_hl(0, "User3", { fg = statusline_hl.bg, bg = diagnostierror_hl.fg , bold = true})
+vim.api.nvim_set_hl(0, "User4", { fg = statusline_hl.bg, bg = diagnosticwarn_hl.fg, bold = true })
 
 --
 local status_str = ""
@@ -68,9 +92,11 @@ local status_str = ""
   .. "%h%m%r"
   .. "%{%v:lua.Pdiagnostics()%}"
   .. "%=" -- separator
+  .. "%{%v:lua.copilotst()%}"
   -- .. "%-14.(%l/%L:%c%V%)"
   -- .. "%-14.(%l/%L:%c%V%) %P"
-  .. " %2l/%L:%c%V "
+  -- .. " %2l/%L:%c%V "
+  .. " %2l/%L:%c "
   .. "%#Error#%{v:lua.lazyupdates()}%0*" -- startup time
   .. "%#Normal# %0*" -- xpadding
 
