@@ -102,9 +102,9 @@ return {
       },
 
       -- refacor
-      {
-        "nvim-treesitter/nvim-treesitter-refactor",
-      },
+      -- {
+      --   "nvim-treesitter/nvim-treesitter-refactor",
+      -- },
     },
     keys = {
       { "<c-space>", desc = "Increment selection" },
@@ -153,9 +153,9 @@ return {
         enable_close = true,
         enable_close_on_slash = true,
       },
-      refactor = {
-        highlight_current_scope = { enable = true },
-      },
+      -- refactor = {
+      --   highlight_current_scope = { enable = true },
+      -- },
     },
     ---@param opts TSConfig
     config = function(_, opts)

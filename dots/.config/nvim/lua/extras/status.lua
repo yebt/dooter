@@ -1,6 +1,6 @@
 --
 
-function _G.lazyupdates()
+function _G.Lazyupdates()
   local ok, lst = pcall(require, "lazy.status")
   if not ok then
     return ""
@@ -31,10 +31,13 @@ function _G.Pdiagnostics()
     local d_info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
 
     d_str = ""
-      .. (d_errors > 0 and ("%#DiagnosticError#" .. error_icon .. d_errors .. " ") or "")
-      .. (d_warnings > 0 and ("%#DiagnosticWarn#" .. warn_icon .. d_warnings .. " ") or "")
-      .. (d_hints > 0 and ("%#DiagnosticHint#" .. hint_icon .. d_hints .. " ") or "")
-      .. (d_info > 0 and ("%#DiagnosticInfo#" .. info_icon .. d_info .. " ") or "")
+      .. "<< "
+      .. (d_errors > 0 and ("%4*" .. error_icon .. d_errors .. " ") or "")
+      .. (d_warnings > 0 and ("%6*" .. warn_icon .. d_warnings .. " ") or "")
+      .. (d_hints > 0 and ("%7*" .. hint_icon .. d_hints .. " ") or "")
+      .. (d_info > 0 and ("%8*" .. info_icon .. d_info .. " ") or "")
+      .. "%0*"
+      .. ">>"
   end
 
   return d_str
@@ -69,18 +72,28 @@ end
 --
 
 local constant_hl = vim.api.nvim_get_hl(0, { name = "Constant" })
+local error_hl = vim.api.nvim_get_hl(0, { name = "Error" })
 local diagnosticwarn_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn" })
-local diagnostierror_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticError" })
+local diagnosticerror_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticError" })
+local diagnostichint_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticHint" })
+local diagnosticinfo_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticInfo" })
+
+-- local diagnostic_hl = vim.api.nvim_get_hl(0, { name = "DiagnosticHint" })
 local special_hl = vim.api.nvim_get_hl(0, { name = "Special" })
 local statusline_hl = vim.api.nvim_get_hl(0, { name = "StatusLine" })
 
 vim.api.nvim_set_hl(0, "User1", { bg = statusline_hl.bg, fg = constant_hl.fg })
+vim.api.nvim_set_hl(0, "User5", { bg = statusline_hl.bg, fg = error_hl.fg, bold = true })
 -- vim.api.nvim_set_hl(0, "User2", { bg = statusline_hl.bg, fg = special_hl.fg })
 -- vim.api.nvim_set_hl(0, "User3", { bg = statusline_hl.bg, fg = diagnostierror_hl.fg })
 -- vim.api.nvim_set_hl(0, "User4", { bg = statusline_hl.bg, fg = diagnosticwarn_hl.fg })
-vim.api.nvim_set_hl(0, "User2", { fg = statusline_hl.bg, bg = special_hl.fg, bold = true})
-vim.api.nvim_set_hl(0, "User3", { fg = statusline_hl.bg, bg = diagnostierror_hl.fg , bold = true})
-vim.api.nvim_set_hl(0, "User4", { fg = statusline_hl.bg, bg = diagnosticwarn_hl.fg, bold = true })
+vim.api.nvim_set_hl(0, "User2", { fg = statusline_hl.bg, bg = special_hl.fg, bold = true })
+vim.api.nvim_set_hl(0, "User3", { fg = statusline_hl.bg, bg = diagnosticerror_hl.fg, bold = true })
+vim.api.nvim_set_hl(0, "User4", { fg = statusline_hl.bg, bg = diagnosticerror_hl.fg })
+
+vim.api.nvim_set_hl(0, "User6", { bg = statusline_hl.bg, fg = diagnosticwarn_hl.fg })
+vim.api.nvim_set_hl(0, "User7", { bg = statusline_hl.bg, fg = diagnostichint_hl.fg })
+vim.api.nvim_set_hl(0, "User8", { bg = statusline_hl.bg, fg = diagnosticinfo_hl.fg })
 
 --
 local status_str = ""
@@ -90,14 +103,16 @@ local status_str = ""
   -- .. "%<%f %h%m%r%=%-14.(%l,%c%V%) %P"
   .. "%<%f "
   .. "%h%m%r"
-  .. "%{%v:lua.Pdiagnostics()%}"
+  .. " %{%v:lua.Pdiagnostics()%}"
+  .. "%=" -- separator
+  .. "%{ get(b:,'lsp_clients','')}"
   .. "%=" -- separator
   .. "%{%v:lua.copilotst()%}"
+  .. "%5*%{v:lua.Lazyupdates()}%0*" -- startup time
   -- .. "%-14.(%l/%L:%c%V%)"
   -- .. "%-14.(%l/%L:%c%V%) %P"
   -- .. " %2l/%L:%c%V "
   .. " %2l/%L:%c "
-  .. "%#Error#%{v:lua.lazyupdates()}%0*" -- startup time
   .. "%#Normal# %0*" -- xpadding
 
 local winbar_str = ""
