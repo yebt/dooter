@@ -6,7 +6,7 @@ if not vim.loop.fs_stat(lazypath) then
     "clone",
     "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    -- "--branch=stable", -- latest stable release
+    "--branch=stable", -- latest stable release
     lazypath,
   })
   vim.notify("Lazy installed ok uwu")
@@ -28,7 +28,7 @@ require("lazy").setup({
     path = "~/.config/nvim/localplugins",
     --path = vim.fn.stdpath("config") .. "/",
     ---@type string[] plugins that match these patterns will use your local versions instead of being fetched from GitHub
-    patterns = {"local"}, -- For example {"folke"}
+    patterns = { "local" }, -- For example {"folke"}
     fallback = false, -- Fallback to git when local plugin doesn't exist
   },
   install = { colorscheme = { "habamax" } },
@@ -78,4 +78,4 @@ require("lazy").setup({
 })
 
 --- MAPS
-vim.keymap.set("n", "<C-l>", ":Lazy <CR>", {silent = true})
+vim.keymap.set("n", "<C-l>", ":Lazy <CR>", { silent = true })
