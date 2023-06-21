@@ -1,4 +1,8 @@
 return {
+  -- schemastore
+  {
+    "b0o/SchemaStore.nvim",
+  },
   -- lspconfig
   {
     "neovim/nvim-lspconfig",
@@ -159,6 +163,7 @@ return {
             },
           })
           lspconfig.lua_ls.setup({
+            capabilities = capabilities,
             settings = {
               Lua = {
                 workspace = {
@@ -170,6 +175,45 @@ return {
                 diagnostics = {
                   globals = { "vim" },
                 },
+              },
+            },
+          })
+        end,
+        ["jsonls"] = function()
+          --Enable (broadcasting) snippet capability for completion
+          capabilities.textDocument.completion.completionItem.snippetSupport = true
+          lspconfig.jsonls.setup({
+            capabilities = capabilities,
+            settings = {
+              json = {
+                schemas = require("schemastore").json.schemas(),
+                validate = { enable = true },
+              },
+            },
+            -- commands = {
+            --   Formatss = {
+            --     function()
+            --       vim.lsp.buf.range_formatting({}, { 0, 0 }, { vim.fn.line("$"), 0 })
+            --     end,
+            --   },
+            -- },
+            -- settings = {
+            --   json = {
+            --     schemas = require("schemastore").json.schemas(),
+            --     validate = { enable = true },
+            --   },
+            -- },
+          })
+        end,
+        ["yamlls"] = function()
+          lspconfig.yamlls.setup({
+            capabilities = capabilities,
+            settings = {
+              yaml = {
+                schemaStore = {
+                  enable = false,
+                },
+                schemas = require("schemastore").yaml.schemas(),
               },
             },
           })
@@ -258,7 +302,7 @@ return {
   -- Trouble
   {
     "folke/trouble.nvim",
-    cmds = {
+    cmd = {
       "Trouble",
       "TroubleClose",
       "TroubleRefresh",
@@ -312,6 +356,7 @@ return {
   -- sisgnature Help
   {
     "ray-x/lsp_signature.nvim",
+    -- enabled = false,
     event = "LspAttach",
     opts = {
       debug = false, -- set to true to enable debug logging
@@ -321,7 +366,7 @@ return {
 
       bind = true, -- This is mandatory, otherwise border config won't get registered.
       -- If you want to hook lspsaga or other signature handler, pls set to false
-      doc_lines = 10, -- will show two lines of comment/doc(if there are more than two lines in doc, will be truncated);
+      doc_lines = 5, -- will show two lines of comment/doc(if there are more than two lines in doc, will be truncated);
       -- set to 0 if you DO NOT want any API comments be shown
       -- This setting only take effect in insert mode, it does not affect signature help in normal
       -- mode, 10 by default
@@ -343,7 +388,7 @@ return {
       -- can be either number or function, see examples
 
       close_timeout = 4000, -- close floating window after ms when laster parameter is entered
-      fix_pos = false, -- set to true, the floating window will not auto-close until finish all parameters
+      fix_pos = true, -- set to true, the floating window will not auto-close until finish all parameters
       hint_enable = true, -- virtual hint enable
       hint_prefix = "🐼 ", -- Panda for parameter, NOTE: for the terminal not support emoji, might crash
       hint_scheme = "String",
@@ -352,13 +397,14 @@ return {
       end, -- should the hint be inline(nvim 0.10 only)?  default false
       hi_parameter = "LspSignatureActiveParameter", -- how your parameter will be highlight
       handler_opts = {
-        border = "rounded", -- double, rounded, single, shadow, none, or a table of borders
+        -- border = "rounded", -- double, rounded, single, shadow, none, or a table of borders
+        border = "shadow", -- double, rounded, single, shadow, none, or a table of borders
       },
 
       always_trigger = false, -- sometime show signature on new line or in middle of parameter can be confusing, set it to false for #58
 
       auto_close_after = nil, -- autoclose signature float win after x sec, disabled if nil.
-      extra_trigger_chars = {}, -- Array of extra characters that will trigger signature completion, e.g., {"(", ","}
+      extra_trigger_chars = { "(", "," }, -- Array of extra characters that will trigger signature completion, e.g., {"(", ","}
       zindex = 200, -- by default it will be on top of all floating windows, set to <= 50 send it to bottom
 
       padding = "", -- character to pad on left and right of signature can be ' ', or '|'  etc

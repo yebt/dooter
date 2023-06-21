@@ -89,7 +89,7 @@ vim.api.nvim_set_hl(0, "User5", { bg = statusline_hl.bg, fg = error_hl.fg, bold 
 -- vim.api.nvim_set_hl(0, "User4", { bg = statusline_hl.bg, fg = diagnosticwarn_hl.fg })
 vim.api.nvim_set_hl(0, "User2", { fg = statusline_hl.bg, bg = special_hl.fg, bold = true })
 vim.api.nvim_set_hl(0, "User3", { fg = statusline_hl.bg, bg = diagnosticerror_hl.fg, bold = true })
-vim.api.nvim_set_hl(0, "User4", { fg = statusline_hl.bg, bg = diagnosticerror_hl.fg })
+vim.api.nvim_set_hl(0, "User4", { bg = statusline_hl.bg, fg = diagnosticerror_hl.fg })
 
 vim.api.nvim_set_hl(0, "User6", { bg = statusline_hl.bg, fg = diagnosticwarn_hl.fg })
 vim.api.nvim_set_hl(0, "User7", { bg = statusline_hl.bg, fg = diagnostichint_hl.fg })

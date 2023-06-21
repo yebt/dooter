@@ -54,17 +54,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, { buffer = ev.buf, desc = "Show signature help" })
     vim.keymap.set(
       "n",
-      "<leader>wa",
+      "<leader>Wa",
       vim.lsp.buf.add_workspace_folder,
       { buffer = ev.buf, desc = "Add workspace folder" }
     )
     vim.keymap.set(
       "n",
-      "<leader>wr",
+      "<leader>Wr",
       vim.lsp.buf.remove_workspace_folder,
       { buffer = ev.buf, desc = "Remove workspace folder" }
     )
-    vim.keymap.set("n", "<leader>wl", function()
+    vim.keymap.set("n", "<leader>Wl", function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, { buffer = ev.buf, desc = "List workspace folders" })
     vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, { buffer = ev.buf, desc = "Go to type definition" })

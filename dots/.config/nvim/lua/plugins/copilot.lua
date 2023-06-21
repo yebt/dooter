@@ -74,20 +74,21 @@ return {
   --   end,
   -- },
 
-
   -- Copilot from vim
   {
     "github/copilot.vim",
     event = "InsertEnter",
     cmd = "Copilot",
     build = ":Copilot setup",
-    init = function ()
+    init = function()
       vim.g.copilot_enabled = 1
       vim.g.copilot_filetypes = {
         markdown = true,
         help = true,
-        lua = true
+        lua = true,
       }
-    end
-  }
+      vim.g.copilot_no_tab_map = true
+      vim.cmd([[imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")]])
+    end,
+  },
 }

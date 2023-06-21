@@ -202,6 +202,8 @@ return {
     -- event = "VeryLazy",
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lsp-document-symbol",
+      -- "hrsh7th/cmp-nvim-lsp-signature-help",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "saadparwaiz1/cmp_luasnip",
@@ -273,6 +275,13 @@ return {
       local get_icon = require("nvim-web-devicons").get_icon
       local types = require("cmp.types")
 
+      local has_words_before = function()
+        unpack = unpack or table.unpack
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+      end
+
+      local luasnip = require("luasnip")
       local cmp = require("cmp")
       return {
         completion = {
@@ -281,7 +290,7 @@ return {
             types.cmp.TriggerEvent.TextChanged,
           },
           keyword_pattern = [[\%(-\?\d\+\%(\.\d\+\)\?\|\h\w*\%(-\w*\)*\)]],
-          keyword_length = 3,
+          -- keyword_length = 3,
         },
         performance = {
           debounce = 60,
@@ -294,7 +303,7 @@ return {
 
         snippet = {
           expand = function(args)
-            require("luasnip").lsp_expand(args.body)
+            luasnip.lsp_expand(args.body)
           end,
         },
         confirm = {
@@ -323,9 +332,38 @@ return {
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
           }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.confirm()
+            elseif luasnip.expand_or_jumpable() then
+              luasnip.expand_or_jump()
+              -- elseif has_words_before() then
+              --   cmp.complete()
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
         }),
         sources = cmp.config.sources({
-          { name = "nvim_lsp" },
+          {
+            name = "nvim_lsp",
+            option = {
+              php = {
+                keyword_pattern = [=[[\%(\$\k*\)\|\k\+]]=],
+              },
+            },
+          },
+          -- { name = "nvim_lsp_signature_help" },
+          { name = "nvim_lsp_document_symbol" },
+        }, {
           {
             name = "luasnip",
           },
@@ -346,13 +384,14 @@ return {
               get_bufnrs = function()
                 return vim.api.nvim_list_bufs()
               end,
+              keyword_length = 3,
             },
           },
           {
             name = "path",
             option = {
               -- Options go into this table
-              trailing_slash = true
+              trailing_slash = true,
             },
           },
           -- { name = "copilot", group_index = 2 },
