@@ -3,11 +3,12 @@ return {
   {
     "NvChad/nvim-colorizer.lua",
     name = "nvccolorizer",
+    event = { "BufReadPost", "BufNewFile" },
     opts = {
       filetypes = {
         "*",
         html = {
-          mode = "foreground",
+          -- mode = "background",
           tailwind = true,
         },
       },

@@ -11,11 +11,6 @@ local lsp_formatting = function(bufnr)
   })
 end
 
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = userlspconfiggroup,
-  callback = function(ev) end,
-})
-
 -- if you want to set up formatting on save, you can use this as a callback
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
@@ -35,14 +30,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
     --local client = ev.data.client_id
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
     if client.supports_method("textDocument/formatting") then
-      vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        group = augroup,
-        buffer = bufnr,
-        callback = function()
-          lsp_formatting(bufnr)
-        end,
-      })
+      -- vim.api.nvim_clear_autocmds({ group = augroup, buffer = ev.buf })
+      -- vim.api.nvim_create_autocmd("BufWritePre", {
+      --   group = augroup,
+      --   buffer = ev.buf,
+      --   callback = function()
+      --     lsp_formatting(ev.buf)
+      --   end,
+      -- })
     end
 
     -- Enable completion triggered by <c-x><c-o>
@@ -77,8 +72,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
     -- vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { buffer = ev.buf, desc = "Code action" })
     vim.keymap.set({ "n", "v" }, "<leader>ca", ":Lspsaga code_action<CR>", { buffer = ev.buf, desc = "Code action" })
     vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = ev.buf, desc = "Go to references" })
+
     vim.keymap.set("n", "<leader>f", function()
-      vim.lsp.buf.format({ async = true })
+      vim.lsp.buf.format({
+        filter = function(clientl)
+          -- apply whatever logic you want (in this example, we'll only use null-ls)
+          return clientl.name == "null-ls"
+        end,
+        bufnr = ev.buf,
+        async = true,
+      })
     end, { buffer = ev.buf, desc = "Format" })
 
     if client.supports_method("textDocument/codeLens") then

@@ -1,0 +1,2 @@
+#
+imgmap -g 800x600 --draw-filename --draw-tinted --scale-down --quiet  --image-bg '#333333'

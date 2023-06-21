@@ -79,6 +79,26 @@ return {
         -- ["rust_analyzer"] = function()
         --   require("rust-tools").setup({})
         -- end,
+        ["tailwindcss"] = function()
+          lspconfig.tailwindcss.setup({
+            capabilities = capabilities,
+            settings = {
+              tailwindCSS = {
+                classAttributes = { "class", "className", "class:list", "classList", "ngClass" },
+                lint = {
+                  cssConflict = "warning",
+                  invalidApply = "error",
+                  invalidConfigPath = "error",
+                  invalidScreen = "error",
+                  invalidTailwindDirective = "error",
+                  invalidVariant = "error",
+                  recommendedVariantOrder = "warning",
+                },
+                validate = true,
+              },
+            },
+          })
+        end,
         ["lua_ls"] = function()
           capabilities = vim.tbl_deep_extend("force", capabilities, {
             textDocument = {
@@ -125,6 +145,7 @@ return {
           nls.builtins.diagnostics.fish,
           nls.builtins.formatting.stylua,
           nls.builtins.formatting.shfmt,
+          nls.builtins.formatting.prettier,
           -- nls.builtins.diagnostics.flake8,
         },
       }

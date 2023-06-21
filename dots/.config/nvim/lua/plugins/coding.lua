@@ -231,6 +231,44 @@ return {
       -- },
     },
     opts = function()
+      local kinds = {
+        Array = " ",
+        Boolean = " ",
+        Class = " ",
+        Color = " ",
+        Constant = " ",
+        Constructor = " ",
+        Copilot = " ",
+        Enum = " ",
+        EnumMember = " ",
+        Event = " ",
+        Field = " ",
+        File = " ",
+        Folder = " ",
+        Function = " ",
+        Interface = " ",
+        Key = " ",
+        Keyword = " ",
+        Method = " ",
+        Module = " ",
+        Namespace = " ",
+        Null = " ",
+        Number = " ",
+        Object = " ",
+        Operator = " ",
+        Package = " ",
+        Property = " ",
+        Reference = " ",
+        Snippet = " ",
+        String = " ",
+        Struct = " ",
+        Text = " ",
+        TypeParameter = " ",
+        Unit = " ",
+        Value = " ",
+        Variable = " ",
+      }
+
       local cmp = require("cmp")
       return {
         completion = {
@@ -283,15 +321,15 @@ return {
         --     cmp.config.compare.order,
         --   },
         -- },
-        -- formatting = {
-        --   format = function(_, item)
-        --     local icons = require("lazyvim.config").icons.kinds
-        --     if icons[item.kind] then
-        --       item.kind = icons[item.kind] .. item.kind
-        --     end
-        --     return item
-        --   end,
-        -- },
+        formatting = {
+          format = function(_, item)
+            local ik = kinds[item.kind]
+            if ik  then
+              item.kind = ik .. item.kind
+            end
+            return item
+          end,
+        },
         -- experimental = {
         --   ghost_text = {
         --     hl_group = "CmpGhostText",

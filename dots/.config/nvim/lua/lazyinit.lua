@@ -22,6 +22,7 @@ require("lazy").setup({
   spec = {
     --{ dir = "settings" },
     { import = "plugins" },
+    { import = "plugins.extras.tailwind" },
   },
   dev = {
     -- directory where you store your local plugin projects

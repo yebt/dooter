@@ -4,6 +4,7 @@ case $- in
     *) return;;
 esac
 
+## IFTNORE OH MY BASH
 # Path to your oh-my-bash installation.
 export OSH='/home/eb/.oh-my-bash'
 

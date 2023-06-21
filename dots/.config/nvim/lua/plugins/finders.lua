@@ -46,6 +46,21 @@ return {
         width = 30,
         mappings = {
           ["<space>"] = "none",
+          ["D"] = "delete",
+          ["d"] = {
+            "add_directory",
+            config = {
+              show_path = "relative", -- "none", "relative", "absolute"
+            },
+          },
+          ["%"] = {
+            "add",
+            -- this command supports BASH style brace expansion ("x{a,b,c}" -> xa,xb,xc). see `:h neo-tree-file-actions` for details
+            -- some commands may take optional config options, see `:h neo-tree-mappings` for details
+            config = {
+              show_path = "relative", -- "none", "relative", "absolute"
+            },
+          },
         },
       },
       default_component_configs = {
