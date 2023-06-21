@@ -38,4 +38,9 @@ return {
       buftypes = {},
     },
   },
+  -- Tabular
+  {
+    "godlygeek/tabular",
+    cmd = "Tabularize",
+  }
 }
