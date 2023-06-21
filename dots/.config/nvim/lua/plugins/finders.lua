@@ -45,7 +45,12 @@ return {
         position = "left",
         width = 30,
         mappings = {
+          -- deactive
           ["<space>"] = "none",
+          ["a"] = "none",
+          ["A"] = "none",
+          --
+          ["-"] = "navigate_up",
           ["D"] = "delete",
           ["d"] = {
             "add_directory",
@@ -61,6 +66,24 @@ return {
               show_path = "relative", -- "none", "relative", "absolute"
             },
           },
+          ["h"] = function(state)
+            local node = state.tree:get_node()
+            if node.type == "directory" and node:is_expanded() then
+              require("neo-tree.sources.filesystem").toggle_directory(state, node)
+            else
+              require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+            end
+          end,
+          ["l"] = function(state)
+            local node = state.tree:get_node()
+            if node.type == "directory" then
+              if not node:is_expanded() then
+                require("neo-tree.sources.filesystem").toggle_directory(state, node)
+              elseif node:has_children() then
+                require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
+              end
+            end
+          end,
         },
       },
       default_component_configs = {
@@ -112,7 +135,17 @@ return {
           },
         },
       },
+      event_handlers = {
+        {
+          event = "file_opened",
+          handler = function(file_path)
+            --auto close
+            require("neo-tree.sources.manager").close_all()
+          end,
+        },
+      },
     },
+    -- opts
     config = function(_, opts)
       require("neo-tree").setup(opts)
       vim.api.nvim_create_autocmd("TermClose", {

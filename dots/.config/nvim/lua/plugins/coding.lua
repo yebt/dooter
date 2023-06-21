@@ -199,6 +199,7 @@ return {
     "hrsh7th/nvim-cmp",
     version = false, -- last release is way too old
     event = "InsertEnter",
+    -- event = "VeryLazy",
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
@@ -237,7 +238,7 @@ return {
         Class = " ",
         Color = " ",
         Constant = " ",
-        Constructor = " ",
+        Constructor = "c ",
         Copilot = " ",
         Enum = " ",
         EnumMember = " ",
@@ -269,11 +270,28 @@ return {
         Variable = " ",
       }
 
+      local get_icon = require("nvim-web-devicons").get_icon
+      local types = require("cmp.types")
+
       local cmp = require("cmp")
       return {
         completion = {
           completeopt = "menu,menuone,noinsert",
+          autocomplete = {
+            types.cmp.TriggerEvent.TextChanged,
+          },
+          keyword_pattern = [[\%(-\?\d\+\%(\.\d\+\)\?\|\h\w*\%(-\w*\)*\)]],
+          keyword_length = 3,
         },
+        performance = {
+          debounce = 60,
+          throttle = 30,
+          -- fetching_timeout = 500,
+          fetching_timeout = 100,
+          async_budget = 1,
+          max_view_entries = 200,
+        },
+
         snippet = {
           expand = function(args)
             require("luasnip").lsp_expand(args.body)
@@ -283,6 +301,16 @@ return {
           -- default_behavior = cmp.ConfirmBehavior.Insert,
           behavior = cmp.ConfirmBehavior.Replace,
         },
+        preselect = types.cmp.PreselectMode.Item, --
+
+        matching = {
+          disallow_fuzzy_matching = false,
+          disallow_fullfuzzy_matching = false,
+          disallow_partial_fuzzy_matching = true,
+          disallow_partial_matching = false,
+          disallow_prefix_unmatching = false,
+        },
+
         mapping = cmp.mapping.preset.insert({
           ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
           ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
@@ -298,10 +326,36 @@ return {
         }),
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "buffer" },
-          { name = "path" },
-          { name = "copilot", group_index = 2 },
+          {
+            name = "luasnip",
+          },
+          {
+            name = "buffer",
+            -- visible
+            -- option = {
+            --   get_bufnrs = function()
+            --     local bufs = {}
+            --     for _, win in ipairs(vim.api.nvim_list_wins()) do
+            --       bufs[vim.api.nvim_win_get_buf(win)] = true
+            --     end
+            --     return vim.tbl_keys(bufs)
+            --   end,
+            -- },
+            -- all buffers
+            option = {
+              get_bufnrs = function()
+                return vim.api.nvim_list_bufs()
+              end,
+            },
+          },
+          {
+            name = "path",
+            option = {
+              -- Options go into this table
+              trailing_slash = true
+            },
+          },
+          -- { name = "copilot", group_index = 2 },
         }),
         -- sorting = {
         --   priority_weight = 2,
@@ -321,20 +375,71 @@ return {
         --     cmp.config.compare.order,
         --   },
         -- },
-        formatting = {
-          format = function(_, item)
-            local ik = kinds[item.kind]
-            if ik  then
-              item.kind = ik .. item.kind
-            end
-            return item
-          end,
-        },
+
+        -- formatting = {
+        --   format = function(_, item)
+        --     local ik = kinds[item.kind]
+        --     if ik  then
+        --       item.kind = ik .. item.kind
+        --     end
+        --     return item
+        --   end,
+        -- },
+
         -- experimental = {
         --   ghost_text = {
         --     hl_group = "CmpGhostText",
         --   },
         -- },
+
+        -- formatting = {
+        --   fields = { "kind", "abbr", "menu" },
+        --   format = function(entry, vim_item)
+        --     local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+        --     local strings = vim.split(kind.kind, "%s", { trimempty = true })
+        --     kind.kind = " " .. (strings[1] or "") .. " "
+        --     kind.menu = "    (" .. (strings[2] or "") .. ")"
+
+        --     return kind
+        --   end,
+        -- },
+
+        -- formatting = {
+        --   format = function(_, vim_item)
+        --     vim_item.kind = (kinds[vim_item.kind] or "") .. vim_item.kind
+        --     return vim_item
+        --   end,
+        -- },
+
+        -- formatting = {
+        --   -- fields = { "kind", "abbr" },
+        --   fields = { "kind", "abbr", "menu" },
+        --   format = function(_, vim_item)
+        --     vim_item.kind = kinds[vim_item.kind] or ""
+        --     return vim_item
+        --   end,
+        -- },
+
+        --
+        formatting = {
+          -- fields = { "kind", "abbr" },
+          fields = { "kind", "abbr", "menu" },
+          format = function(entry, vim_item)
+            --
+            if vim.tbl_contains({ "path" }, entry.source.name) then
+              local icon, hl_group = get_icon(entry:get_completion_item().label)
+              if icon then
+                vim_item.kind = icon
+                vim_item.kind_hl_group = hl_group
+                return vim_item
+              end
+            end
+            vim_item.kind = kinds[vim_item.kind] or ""
+            return vim_item
+          end,
+        },
+
+        --
       }
     end,
   },
