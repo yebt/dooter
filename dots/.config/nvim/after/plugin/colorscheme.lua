@@ -1,7 +1,7 @@
 local pref_colorscheme = "catppuccin"
 --local pref_colorscheme = "habamax"
 local default_colorscheme = "habamax"
-
+vim.cmd("colorscheme catppuccin-mocha" )
 if not pcall(vim.cmd.colorscheme, pref_colorscheme) then
   vim.cmd.colorscheme(default_colorscheme)
 

@@ -29,6 +29,10 @@ return {
         vim.tbl_deep_extend("force", lsp_defaults.capabilities, require("cmp_nvim_lsp").default_capabilities())
       lsp_defaults.capabilities.textDocument.completion.completionItem.snippetSupport = true
 
+      lsp_defaults.capabilities.textDocument.foldingRange = {
+        dynamicRegistration = false,
+        lineFoldingOnly = true,
+      }
       --
       local sign = function(opts)
         vim.fn.sign_define(opts.name, {
@@ -270,7 +274,8 @@ return {
         incoming = " ",
         outgoing = " ",
         hover = " ",
-        kind = {},
+        -- kind = {},
+        kind = require("catppuccin.groups.integrations.lsp_saga").custom_kind(),
       },
     },
   },

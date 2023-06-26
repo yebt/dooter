@@ -93,6 +93,9 @@ return {
       -- snippets
       "saadparwaiz1/cmp_luasnip",
       --
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+      "hrsh7th/cmp-nvim-lsp-document-symbol",
+      --
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
       --
       -- {
@@ -205,7 +208,11 @@ return {
         },
 
         sources = cmp.config.sources({
-          -- LSP
+          --
+          { name = "nvim_lsp_signature_help" },
+          { name = "nvim_lsp_document_symbol" },
+
+          -- LSPhrsh7th/cmp-nvim-lsp-document-symbol
           {
             name = "nvim_lsp",
             keyword_length = 1,
@@ -239,7 +246,7 @@ return {
             },
           },
           { name = "path", option = { trailing_slash = true } },
-          { name = "copilot", group_index = 2 },
+          -- { name = "copilot", group_index = 2 },
         }),
 
         formatting = {
