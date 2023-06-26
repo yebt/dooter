@@ -4,6 +4,4 @@ require("config")
 -- Lazi
 require ("lazyinit")
 -- Extras
-require("extras")
--- Local plugins
--- require("localplugs")
+require ("extras")

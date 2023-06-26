@@ -29,9 +29,23 @@ local function event(ev)
   end)
 end
 
-----
--- Cases
-----
+-- Delete match of url
+-- local function delete_url_match()
+--   for _, match in ipairs(vim.fn.getmatches()) do
+--     if match.group == "HighlightURL" then
+--       vim.fn.matchdelete(match.id)
+--     end
+--   end
+-- end
+
+-- Set url
+-- local function set_url_match()
+--   delete_url_match()
+--   if vim.g.highlighturl_enabled then
+--     vim.fn.matchadd("HighlightURL", url_matcher, 15)
+--   end
+-- end
+
 -- Clear the search like vim cool -- NO all cases
 vim.on_key(function(char)
   if vim.fn.mode() == "n" then
@@ -41,10 +55,6 @@ vim.on_key(function(char)
     end
   end
 end, namespace("auto_hlsearch"))
-
-----
--- Autocmds
-----
 
 -- Update buffer var
 local bufferline_group = augroup("bufferline", { clear = true })
@@ -66,6 +76,29 @@ autocmd({ "BufAdd", "BufEnter", "TabNewEntered" }, {
   end,
 })
 
+autocmd("BufDelete", {
+  desc = "Update buffers when deleting buffers",
+  group = bufferline_group,
+  callback = function(args)
+    for _, tab in ipairs(vim.api.nvim_list_tabpages()) do
+      local bufs = vim.t[tab].bufs
+      if bufs then
+        for i, bufnr in ipairs(bufs) do
+          if bufnr == args.buf then
+            table.remove(bufs, i)
+            vim.t[tab].bufs = bufs
+            break
+          end
+        end
+      end
+    end
+    -- vim.t.bufs = vim.tbl_filter(require("nu.utils.buffer").is_valid, vim.t.bufs)
+
+    vim.t.bufs = vim.tbl_filter(is_valid, vim.t.bufs or {})
+    event("BufsUpdated")
+    vim.cmd.redrawtabline()
+  end,
+})
 
 -- unlist quick bffs
 autocmd("FileType", {
@@ -77,7 +110,17 @@ autocmd("FileType", {
   end,
 })
 
--- Auto view
+-- Ursl Highlighting
+-- autocmd({ "VimEnter", "FileType", "BufEnter", "WinEnter" }, {
+--   desc = "URL Highlighting",
+--   group = augroup("highlighturl", { clear = true }),
+--   pattern = "*",
+--   callback = function()
+--     set_url_match()
+--   end,
+-- })
+
+-- -- Auto view
 local view_group = augroup("_auto_view", { clear = true })
 autocmd({ "BufWinLeave", "BufWritePost", "WinLeave" }, {
   desc = "Save view with mkview for real files",
@@ -192,4 +235,16 @@ autocmd({ "LspAttach", "LspDetach" }, {
   end,
 })
 
+-- PLUGINS
 
+if is_available("resession.nvim") then
+  autocmd("VimLeavePre", {
+    desc = "Save session on close",
+    group = augroup("_resession_auto_save", { clear = true }),
+    callback = function()
+      local save = require("resession").save
+      save("Last Session", { notify = false })
+      save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
+    end,
+  })
+end

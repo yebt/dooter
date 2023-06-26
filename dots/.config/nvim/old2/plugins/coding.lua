@@ -99,7 +99,12 @@ return {
     dependencies = {
       "rafamadriz/friendly-snippets",
       config = function()
-        require("luasnip.loaders.from_vscode").lazy_load()
+        local luasniploadersfromvscode = require("luasnip.loaders.from_vscode")
+        --require("luasnip.loaders.from_vscode").lazy_load({paths = "~/.config/nvim/my_snippets"})
+        -- require("luasnip.loaders.from_vscode").lazy_load()
+        luasniploadersfromvscode.lazy_load() -- friendly-snippets
+        --cause lazy remove other rtp
+        luasniploadersfromvscode.lazy_load({ paths = "~/.config/nvim/snippets" }) -- local snippets
       end,
     },
     opts = {},
@@ -207,6 +212,13 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "saadparwaiz1/cmp_luasnip",
+      --
+      {
+        "dcampos/cmp-emmet-vim",
+        dependencies = {
+          "mattn/emmet-vim",
+        },
+      },
       -- {
       --   "zbirenbaum/copilot-cmp",
       --   dependencies = "copilot.lua",
@@ -339,6 +351,7 @@ return {
               luasnip.expand_or_jump()
               -- elseif has_words_before() then
               --   cmp.complete()
+            else
               fallback()
             end
           end, { "i", "s" }),
@@ -353,6 +366,7 @@ return {
           end, { "i", "s" }),
         }),
         sources = cmp.config.sources({
+
           {
             name = "nvim_lsp",
             option = {
@@ -361,12 +375,30 @@ return {
               },
             },
           },
-          -- { name = "nvim_lsp_signature_help" },
-          { name = "nvim_lsp_document_symbol" },
-        }, {
           {
             name = "luasnip",
           },
+          -- { name = "nvim_lsp_signature_help" },
+          { name = "nvim_lsp_document_symbol" },
+          {
+            name = "emmet_vim",
+            option = {
+              filetypes = {
+                "html",
+                "xml",
+                "typescriptreact",
+                "javascriptreact",
+                "css",
+                "sass",
+                "scss",
+                "less",
+                "heex",
+                "tsx",
+                "jsx",
+              },
+            },
+          },
+          -- }, {
           {
             name = "buffer",
             -- visible

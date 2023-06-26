@@ -101,44 +101,7 @@ end, { silent = true, expr = true, desc = "Add surround" })
 -- Explorer
 -- map("n", "<leader>E", ":Ex<CR>", {silent = true})
 -- map("n", "<leader>V", ":Vex<CR>", {silent = true})
--- map("n", "\\", ":Lex %:p:h <CR>", {silent = true})
--- map("n", "\\", ":Vex<CR>", {silent = true})
+map("n", "\\", ":Lex %:p:h <CR>", {silent = true})
+--map("n", "\\", ":Vex<CR>", {silent = true})
 
-function OpenVexprore()
-  -- Verificar si el buffer de netrw ya está abierto
-  local netrw_buf_exists = false
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_get_option(buf, 'filetype') == 'netrw' then
-      netrw_buf_exists = true
-      break
-    end
-  end
-
-  -- Abrir Vexprore si el buffer de netrw no está abierto
-  if not netrw_buf_exists then
-    vim.cmd('Vexplore')
-  else
-    -- Obtener el número del buffer actual
-    local current_buf = vim.api.nvim_get_current_buf()
-
-    -- Verificar si el buffer actual es netrw
-    if vim.api.nvim_buf_get_option(current_buf, 'filetype') == 'netrw' then
-      -- Cerrar el buffer actual
-      vim.cmd('bd')
-    else
-      -- Enfocar el buffer de netrw
-      for _, win in ipairs(vim.api.nvim_list_wins()) do
-        local buf = vim.api.nvim_win_get_buf(win)
-        if vim.api.nvim_buf_get_option(buf, 'filetype') == 'netrw' then
-          vim.api.nvim_set_current_win(win)
-          break
-        end
-      end
-    end
-  end
-end
-
-map("n", "\\", OpenVexprore , {silent = true}) 
-
--- Togglers
 

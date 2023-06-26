@@ -22,9 +22,7 @@ require("lazy").setup({
   spec = {
     --{ dir = "settings" },
     { import = "plugins" },
-    --
-    -- {import = "rcoc"},
-    {import = "rnative"}
+    { import = "plugins.extras.tailwind" }, -- cause the etra call bad usage
   },
   dev = {
     -- directory where you store your local plugin projects

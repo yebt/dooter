@@ -63,12 +63,16 @@ return {
       --   kinds[i] = icons[kind] or kind
       -- end
 
-      local capabilities = vim.tbl_deep_extend(
-        "force",
-        {},
-        vim.lsp.protocol.make_client_capabilities(),
-        require("cmp_nvim_lsp").default_capabilities()
-      )
+      -- local capabilities = vim.tbl_deep_extend(
+      --   "force",
+      --   {},
+      --   vim.lsp.protocol.make_client_capabilities(),
+      --   require("cmp_nvim_lsp").default_capabilities()
+      -- )
+      local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+
       local lspconfig = require("lspconfig")
       require("plugins.lsp.keys")
       require("mason").setup()
@@ -153,15 +157,6 @@ return {
           })
         end,
         ["lua_ls"] = function()
-          capabilities = vim.tbl_deep_extend("force", capabilities, {
-            textDocument = {
-              completion = {
-                completionItem = {
-                  snippetSupport = true,
-                },
-              },
-            },
-          })
           lspconfig.lua_ls.setup({
             capabilities = capabilities,
             settings = {
@@ -218,7 +213,63 @@ return {
             },
           })
         end,
+
+        ["emmet_ls"] = function()
+          lspconfig.emmet_ls.setup({
+            capabilities = capabilities,
+            init_options = {
+              html = {
+                options = {
+                  -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
+                  ["bem.enabled"] = true,
+                },
+              },
+            },
+            settings = {
+              emmet = {
+                config = {
+                  options = {
+                    outputStyle = "expanded",
+                  },
+                },
+              },
+            },
+          })
+        end,
       })
+
+      -- local configs = require'lspconfig.configs'
+      -- if not configs.ls_emmet then
+      --   configs.ls_emmet = {
+      --     default_config = {
+      --       cmd = { "ls_emmet", "--stdio" },
+      --       filetypes = {
+      --         "html",
+      --         "css",
+      --         "scss",
+      --         "javascriptreact",
+      --         "typescriptreact",
+      --         "haml",
+      --         "xml",
+      --         "xsl",
+      --         "pug",
+      --         "slim",
+      --         "sass",
+      --         "stylus",
+      --         "less",
+      --         "sss",
+      --         "hbs",
+      --         "handlebars",
+      --       },
+      --       root_dir = function(fname)
+      --         return vim.loop.cwd()
+      --       end,
+      --       settings = {},
+      --     },
+      --   }
+      -- end
+
+      -- lspconfig.ls_emmet.setup({ capabilities = capabilities })
 
       -- Status
       require("fidget").setup({})

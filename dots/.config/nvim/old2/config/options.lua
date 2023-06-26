@@ -1,6 +1,9 @@
 local opt = vim.opt
+
 ----
+
 opt.compatible = false
+
 -- wrap
 -- opt.wrap = false
 opt.showbreak = "↳"
@@ -22,8 +25,10 @@ opt.cursorline = true
 opt.concealcursor = "nc"
 opt.conceallevel = 2
 --
+--
 opt.nu = true
 opt.rnu = true
+--
 --
 --opt.cmdheight = 1
 --opt.cmdheight = 0
@@ -64,6 +69,7 @@ opt.infercase = true
 opt.smartcase = true
 --
 opt.showmode = false
+--
 -- opt.termguicolors = true
 opt.background = "dark"
 --

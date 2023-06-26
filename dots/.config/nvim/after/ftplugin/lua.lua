@@ -1,30 +1,5 @@
 local optl = vim.opt_local
--- optl.fp = "stylua" -- not range allow
--- vim.keymap.set("n", "<leader>f", function()
---   vim.cmd("silent write")
---   -- local output = vim.fn.system('ls ' .. vim.nf.expand("%"))
---   -- vim.notify(output)
---   --local output = vim.api.nvim_exec("!stylua %", true)
---   --vim.notify(output)
---   -- Ejecutar un comando de shell y manejar errores
---   local print = function(args)
---     vim.notify(vim.inspect(args))
---   end
---   local scs, opt, cd = pcall(vim.api.nvim_exec2, "!stylua %", true)
---   vim.notify(vim.inspect({ scs, opt, cd }))
---   -- print({ scs, opt, cd })
---   -- local command = "stylua " .. vim.fn.expand("%")
---   -- local handle_error = true
--- 
---   -- local success, output, code = pcall(vim.fn.system, command)
--- 
---   -- -- Verificar si se produjo un error
--- 
---   -- if not success then
---   --   print({ "Ocurrió un error al ejecutar el comando: ", output, code })
---   -- end
---   -- vim.cmd("silent e")
--- end, { desc = "format", silent = true })
+optl.fp = "stylua" -- not range allow
 
 optl.tabstop = 2
 optl.shiftwidth = 2
