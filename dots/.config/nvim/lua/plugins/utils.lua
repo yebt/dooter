@@ -7,7 +7,8 @@ return {
   {
     "CRAG666/code_runner.nvim",
     keys = {
-      {"<leader>r", ":RunFile<CR>"}
+      {"<leader>r", ":RunFile<CR>"},
+      {"<F9>", ":RunFile<CR>"}
     },
     opts = {
       -- choose default mode (valid term, tab, float, toggle)

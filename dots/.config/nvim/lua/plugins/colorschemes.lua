@@ -43,7 +43,7 @@ return {
         telescope = true,
         notify = false,
         mini = false,
-        leap = true,
+        leap = false,
         illuminate = true,
         lsp_saga = true,
         mason = true,

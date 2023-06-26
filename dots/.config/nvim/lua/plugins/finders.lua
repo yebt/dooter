@@ -11,11 +11,6 @@ return {
       end
       return ret
     end,
-    init = function()
-      vim.api.nvim_set_hl(0, "LeapLabelPrimary", { fg = "#ff007c", bold = true })
-      vim.api.nvim_set_hl(0, "LeapLabelSecondary", { fg = "#00dfff", bold = true })
-      vim.api.nvim_set_hl(0, "LeapBackdrop", { fg = "grey" })
-    end,
     opts = { labeled_modes = "nx" },
   },
   {

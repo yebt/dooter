@@ -138,12 +138,12 @@ return {
   { "JoosepAlviste/nvim-ts-context-commentstring", lazy = true },
   --
   -- vim matchup
-  -- {
-  --   "andymass/vim-matchup",
-  --   lazy = false,
-  --   init = function()
-  --     vim.g.matchup_matchparen_offscreen = { method = "popup" }
-  --     vim.g.matchup_transmute_enabled = 1
-  --   end,
-  -- },
+  {
+    "andymass/vim-matchup",
+    lazy = false,
+    init = function()
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+      vim.g.matchup_transmute_enabled = 1
+    end,
+  },
 }
