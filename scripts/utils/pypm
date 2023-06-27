@@ -1,0 +1,236 @@
+#!/bin/bash
+
+####
+## Settings
+###
+
+# Exit on error
+set -e
+
+# Options
+OPTION_ENV_NAME=".env"
+
+####
+## Colors
+####
+
+# Definir colores
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+LIGHT_GRAY='\033[0;37m'
+DARK_GRAY='\033[1;30m'
+LIGHT_RED='\033[1;31m'
+LIGHT_GREEN='\033[1;32m'
+LIGHT_YELLOW='\033[1;33m'
+LIGHT_BLUE='\033[1;34m'
+LIGHT_PURPLE='\033[1;35m'
+LIGHT_CYAN='\033[1;36m'
+WHITE='\033[1;37m'
+NC='\033[0m' # No Color
+
+####
+## Usage
+###
+declare -a DEPENDENCIES=("python3" "pip" "virtualenv" "git" "curl")
+declare -A COMMANDS
+COMMANDS=(
+	["help"]="generate_help:Show help message:h"
+	["init"]="init:Initialize a Python project.:I"
+	["activate"]="activate:Activate environment.:a"
+	["install"]="install:install with pip:i"
+	["update"]="update_reqs:Update the requirements file:u"
+)
+
+#
+GITIGNORE_URL="https://www.toptal.com/developers/gitignore/api/python,pythonvanilla,virtualenv,pydev"
+GITIGNORE_CONTENT="curl $GITIGNORE_URL"
+
+SYMBOL_ACTION=" [${LIGHT_GREEN}+${NC}] "
+SYMBOL_WARNING=" [${YELLOW}!${NC}] "
+SYMBOL_ERROR=" [${RED}x${NC}] "
+SYMBOL_INFO=" [${CYAN}i${NC}] "
+SYMBOL_ABORT=" [${PURPLE}-${NC}] "
+SYMBOL_OK=" [${GREEN}✔${NC}] "
+
+####
+## Check Dependencies
+####
+
+# Función para verificar las dependencias
+function check_dependencies() {
+	for dep in "${DEPENDENCIES[@]}"; do
+		if ! command -v $dep &>/dev/null; then
+			echo -e "${RED}$dep is not installed. Please install it and try again.${NC}"
+			exit
+		fi
+	done
+}
+
+####
+## Funcitons
+####
+
+## Show th help message
+function generate_help() {
+	echo -e "${LIGHT_CYAN}Python Project Manager (pymp) commands:${NC}"
+
+	for cmd in "${!COMMANDS[@]}"; do
+		local function=$(echo ${COMMANDS[$cmd]} | cut -d ':' -f 1)
+		local doc=$(echo ${COMMANDS[$cmd]} | cut -d ':' -f 2)
+		local alias=$(echo ${COMMANDS[$cmd]} | cut -d ':' -f 3)
+		echo -e "\t${LIGHT_GREEN}$cmd ($alias):${NC} $doc"
+	done
+}
+
+## execute the command
+function execute_command() {
+	local input=$1
+	local found=0
+
+	for key in "${!COMMANDS[@]}"; do
+		local command=${COMMANDS[$key]}
+		local fun=$(echo $command | cut -d ':' -f 1)
+		local alias=$(echo $command | cut -d ':' -f 3)
+		if [[ "$key" == "$input" || "$alias" == "$input" ]]; then
+			eval $fun ${@:2}
+			found=1
+			break
+		fi
+	done
+
+	if [ $found -eq 0 ]; then
+		echo -e "${SYMBOL_ERROR}${RED}Invalid command: $input. Use 'help' for a list of available commands.${NC}"
+		return
+	fi
+
+}
+
+## Create a new project
+function init() {
+	local directory=$1
+
+	if [ -z "$directory" ]; then
+		echo -e "${SYMBOL_WARNING}${YELLOW}No directory provided. Using current directory.${NC}"
+		directory="."
+	fi
+
+	if [ ! -d "$directory" ]; then
+		echo -e "${SYMBOL_INFO}${BLUE}Directory $directory does not exist creating.${NC}"
+		mkdir -p $directory
+	fi
+
+	echo -e "${SYMBOL_ACTION}${GREEN}Initializing project in $directory...${NC}"
+
+	# Check if directory is empty
+	if [ "$(ls -A $directory)" ]; then
+		echo -e "${SYMBOL_WARNING}${YELLOW}Warning: Directory is not empty.${NC}"
+		read -p "Continue? (y/N) " -n 1 -r
+		echo
+		if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+			echo -e "${SYMBOL_ABORT}${RED}Aborting.${NC}"
+			return
+		fi
+	fi
+
+	# Initialize Git
+	if [ ! -d "$directory/.git" ]; then
+		echo -e "${SYMBOL_ACTION}${GREEN}Initializing Git repository...${NC}"
+		git -C $directory init
+		echo -e "${SYMBOL_ACTION}${GREEN}Adding .gitignore...${NC}"
+		$GITIGNORE_CONTENT -o "$directory/.gitignore"
+	else
+		echo -e "${SYMBOL_WARNING}${YELLOW}Skipping Git repository initialization: already a repository.${NC}"
+		if [ -f "$directory/.gitignore" ]; then
+			echo -e "${SYMBOL_WARNING}${YELLOW}.gitignore file already exists.${NC}"
+			read -p "Do you want to overwrite .gitignore? (y/N) " -n 1 -r
+			echo
+			if [[ $REPLY =~ ^[Yy]$ ]]; then
+				echo -e "${SYMBOL_ACTION}${GREEN}Overwriting .gitignore...${NC}"
+				$GITIGNORE_CONTENT -o "$directory/.gitignore"
+			else
+				echo -e "${SYMBOL_WARNING}${YELLOW}Skipping .gitignore overwrite.${NC}"
+			fi
+		else
+			echo -e "${SYMBOL_ACTION}${GREEN}Adding .gitignore...${NC}"
+			$GITIGNORE_CONTENT -o "$directory/.gitignore"
+		fi
+	fi
+
+	# Initialize virtual environment
+	if [ ! -d "$directory/$OPTION_ENV_NAME" ]; then
+		echo -e "${SYMBOL_ACTION}${GREEN}Creating Python virtual environment...${NC}"
+		python3 -m venv $directory/$OPTION_ENV_NAME
+	else
+		echo -e "${SYMBOL_WARNING}${YELLOW}Skipping Python virtual environment creation: '$OPTION_ENV_NAME' directory already exists.${NC}"
+	fi
+
+	# Add project structure
+	echo -e "${SYMBOL_ACTION}${GREEN}Creating project structure...${NC}"
+
+	mkdir -p $directory/{app,tests,docs}
+	# app
+	touch "$directory/app/__init__.py" "$directory/app/main.py" "$directory/app/module.py"
+	# tests
+	touch "$directory/tests/__init__.py" "$directory/tests/test_main.py" "$directory/tests/test_module.py"
+	# docs
+	touch "$directory/docs/README.md"
+	# config
+	touch "$directory/config.yaml"
+	echo "env: $OPTION_ENV_NAME" >>"$directory/config.yaml"
+	# setup
+	touch "$directory/setup.py"
+	echo "from setuptools import setup, find_packages" >>"$directory/setup.py"
+	echo "setup(name='$directory', version='1.0', packages=find_packages())" >>"$directory/setup.py"
+	# reqs
+	source $directory/$OPTION_ENV_NAME/bin/activate
+	which pip
+	pip install --upgrade pip
+	pip install pipreqs
+	touch "$directory/requirements.txt"
+	# Readme
+	if [ -f "$directory/README.md" ]; then
+		echo -e "${SYMBOL_WARNING}${YELLOW}Skipping README.${NC}"
+	else
+		echo -e "${SYMBOL_ACTION}${GREEN}Adding README...${NC}"
+		touch "$directory/README.md"
+		# echo multiple lines to README content
+		echo "# $directory" >>"$directory/README.md"
+		echo "## Description" >>"$directory/README.md"
+		echo "## Requirements" >>"$directory/README.md"
+		echo "## Installation" >>"$directory/README.md"
+		echo "## Usage" >>"$directory/README.md"
+		echo "## License" >>"$directory/README.md"
+	fi
+
+	echo -e "${SYMBOL_OK}${GREEN}Project initialized.${NC}"
+}
+
+## Activate the environment
+function activate() {
+	source $OPTION_ENV_NAME/bin/activate
+}
+## Install wrapper
+function install() {
+    if [ -z "$1" ]; then
+        #install reqfile
+        pip install -r requirements.txt && update_reqs
+        return
+    fi
+	pip install "$@" && update_reqs
+}
+
+## update requirements.txt
+function update_reqs() {
+	pipreqs --use-local --encoding utf8 --force ./
+}
+
+####
+## Main
+####
+
+# execute_command $1
+execute_command "$@"

@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# Definir colores
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # No Color
+
+# Comprobamos si las dependencias están instaladas
+command -v python3 >/dev/null 2>&1 || { echo -e "${RED}Python3 no está instalado. Por favor, instálalo e intenta de nuevo.${NC}"; exit 1; }
+command -v pip >/dev/null 2>&1 || { echo -e "${RED}pip no está instalado. Por favor, instálalo e intenta de nuevo.${NC}"; exit 1; }
+command -v git >/dev/null 2>&1 || { echo -e "${RED}git no está instalado. Por favor, instálalo e intenta de nuevo.${NC}"; exit 1; }
+command -v virtualenv >/dev/null 2>&1 || { echo -e "${RED}virtualenv no está instalado. Por favor, instálalo e intenta de nuevo.${NC}"; exit 1; }
+
+function create_project() {
+    if [ "$(ls -A .)" ]; then
+        echo -e "${RED}El directorio actual no está vacío. Por favor, utiliza un directorio vacío.${NC}"
+        return
+    fi
+    mkdir -p $1/app $1/tests $1/docs
+    echo -e "${GREEN}- Estructura del proyecto creada OK.${NC}"
+    touch $1/app/__init__.py $1/tests/__init__.py $1/README.md $1/.gitignore
+    echo "# $1" >> $1/README.md
+    if [ ! -d ".git" ]; then
+        git -C $1 init
+        echo -e "${GREEN}- Repositorio git inicializado OK.${NC}"
+    else
+        echo -e "${YELLOW}- Se omite la inicialización del repositorio git porque ya existe uno.${NC}"
+    fi
+    if [ ! -d "venv" ]; then
+        python3 -m venv $1/venv
+        echo -e "${GREEN}- Ambiente virtual creado OK.${NC}"
+        source $1/venv/bin/activate
+    else
+        echo -e "${YELLOW}- Se omite la creación del ambiente virtual porque ya existe uno.${NC}"
+        activate_env
+    fi
+    pip install pipreqs
+    update-reqs
+    echo -e "${GREEN}Proyecto creado exitosamente.${NC}"
+}
+
+function activate_env() {
+    if [ -d "venv" ]; then
+        source venv/bin/activate
+        echo -e "${GREEN}Ambiente virtual activado.${NC}"
+    else
+        echo -e "${RED}No existe un ambiente virtual en este directorio.${NC}"
+    fi
+}
+
+function update_reqs() {
+    if [ -d "venv" ]; then
+        pipreqs --force ./
+        echo -e "${GREEN}Archivo requirements.txt actualizado.${NC}"
+    else
+        echo -e "${RED}No existe un ambiente virtual en este directorio.${NC}"
+    fi
+}
+
+function display_help() {
+    echo "Uso: ./manage.sh [comando]"
+    echo ""
+    echo "Comandos:"
+    echo "  create      Crea un nuevo proyecto en el directorio especificado o en el directorio actual si se especifica '.'"
+    echo "  activate    Activa el ambiente virtual del proyecto actual"
+    echo "  update-reqs Actualiza el archivo requirements.txt del proyecto actual"
+    echo "  help        Muestra esta ayuda"
+}
+
+if [ "$1" = "create" ] || [ "$1" = "c" ]; then
+    create_project $2
+elif [ "$1" = "activate" ] || [ "$1" = "a" ]; then
+    activate_env
+elif [ "$1" = "update-reqs" ] || [ "$1" = "u" ]; then
+    update_reqs
+elif [ "$1" = "help" ] || [ "$1" = "h" ]; then
+    display_help
+else
+    echo -e "${RED}Comando no válido. Los comandos válidos son: create, activate, update-reqs, help${NC}"
+    display_help
+fi
+
