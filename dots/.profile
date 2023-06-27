@@ -2,6 +2,7 @@ alias nv="nvim"
 alias sudo="sudo "
 alias ls="ls --color=auto"
 alias rgr="ranger"
+alias x="exa"
 
 
 export PATH=~/.npm-global/bin:$PATH
