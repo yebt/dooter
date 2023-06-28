@@ -212,6 +212,7 @@ function init() {
 ## Activate the environment
 function activate() {
 	source $OPTION_ENV_NAME/bin/activate
+	echo -e "${SYMBOL_OK}${GREEN}Env actived.${NC}"
 }
 ## Install wrapper
 function install() {
