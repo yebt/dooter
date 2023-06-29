@@ -3,7 +3,8 @@
 #: VARS {{{
 set $mod Mod4
 set $refresh_i3status killall -SIGUSR1 i3status
-set $term kitty
+# set $term kitty
+set $term alacritty
 # set $locker i3lock -f -e  -b -c 282828 -n 
 # betterlockscreen -u wallhaven-dp3lzm.jpg  --fx dim,pixel,blur,dimblur
 set $locker betterlockscreen  -l dimblur --off 2 --color #282828
@@ -153,6 +154,8 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym $mod+Return exec $term
 bindsym $mod+Shift+Return exec $term --class 'kittyfloat' --title 'kitty'
 
+# Right click to paste
+bindsym $mod+z exec xdotool click 3  
 
 
 # Use Mouse+$mod to drag floating windows to their wanted position
