@@ -446,7 +446,7 @@ exec --no-startup-id nm-applet
 
 exec_always --no-startup-id setxkbmap -layout latam,us -option 'grp:ctrl_alt_toggle'
 #off beep
-exec --no-startup-id xset b off
+exec_always --no-startup-id xset b off
 # enable tap touchpad
 # xinput  | grep Touchpad 
 # ⎜   ↳ Elan Touchpad                           	id=10	[slave  pointer  (2)]
