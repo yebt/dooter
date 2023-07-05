@@ -296,4 +296,9 @@ return {
       },
     },
   },
+
+  -- Formatting wrapper
+  -- {
+  --   "lukas-reineke/lsp-format.nvim",
+  -- },
 }
