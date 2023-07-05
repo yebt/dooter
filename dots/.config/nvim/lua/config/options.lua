@@ -125,3 +125,6 @@ vim.g.netrw_keepdir = 0
 -- vim.g.netrw_special_syntax = 1
 -- vim.g.netrw_altv = 1
 -- vim.g.netrw_fastbrowse = 2
+
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
