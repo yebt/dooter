@@ -25,7 +25,7 @@ return {
     },
     opts = {
       highlight = { enable = true },
-      indent = { enable = true },
+      indent = { enable = false },
       ensure_installed = {
         "bash",
         "c",
@@ -145,5 +145,11 @@ return {
       vim.g.matchup_matchparen_offscreen = { method = "popup" }
       vim.g.matchup_transmute_enabled = 1
     end,
+  },
+  -- vim tsrainbouw
+  {
+    url = "https://gitlab.com/HiPhish/rainbow-delimiters.nvim",
+    lazy = false,
+    --event = "VeryLazy",
   },
 }

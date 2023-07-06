@@ -149,6 +149,13 @@ return {
           ["<C-d>"] = cmp.mapping.scroll_docs(4),
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
+          ["<ESC>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.close()
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
           ["<CR>"] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
           ["<S-CR>"] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
@@ -157,7 +164,11 @@ return {
           ["<Tab>"] = cmp.mapping(function(fallback)
             -- local col = vim.fn.col(".") - 1
             if cmp.visible() then
-              cmp.select_next_item(select_opts)
+              cmp.confirm({
+                behavior = cmp.ConfirmBehavior.Replace,
+                select = true,
+              })
+              -- cmp.select_next_item(select_opts)
               -- elseif col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
               --   fallback()
             elseif require("copilot.suggestion").is_visible() then

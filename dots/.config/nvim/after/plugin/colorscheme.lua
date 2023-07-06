@@ -35,7 +35,9 @@ end
 
 local function redefSomeColors()
 
-    vim.api.nvim_set_hl(0, "MatchParen", { bold = true, italic = true })
+    -- vim.api.nvim_set_hl(0, "MatchParen", { bold = true, italic = true })
+    vim.api.nvim_set_hl(0, "MatchParenCur", { bold = true, italic = true })
+    -- vim.api.nvim_set_hl(0, "MatchWordCur", { bold = true, italic = true })
 
     vim.api.nvim_set_hl(0, "MatchWordCur", {
       italic = true,
