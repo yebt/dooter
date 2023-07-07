@@ -7,7 +7,8 @@ set $refresh_i3status killall -SIGUSR1 i3status
 set $term alacritty
 # set $locker i3lock -f -e  -b -c 282828 -n 
 # betterlockscreen -u wallhaven-dp3lzm.jpg  --fx dim,pixel,blur,dimblur
-set $locker betterlockscreen  -l dimblur --off 2 --color #282828
+#set $locker betterlockscreen  -l dimblur --off 2 --color #282828
+set $locker /home/eb/.local/bin/betterlockscreen  -l dimblur --off 5 --color #282828
 set $notificate notify-send
 set $refresh_i3status killall -SIGUSR1 i3status
 set $compositor compton
@@ -155,7 +156,8 @@ bindsym $mod+Return exec $term
 bindsym $mod+Shift+Return exec $term --class 'kittyfloat' --title 'kitty'
 
 # Right click to paste
-bindsym $mod+z exec xdotool click 3  
+# bindsym $mod+z exec xdotool click 3  
+bindsym $mod+z exec xdotool keydown 135
 
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -438,7 +440,8 @@ exec --no-startup-id dex-autostart --autostart --environment i3
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+#exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id xss-lock --transfer-sleep-lock -- $locker
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
