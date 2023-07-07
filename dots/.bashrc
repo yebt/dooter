@@ -138,3 +138,6 @@ source ~/.profile
 # laod fzf 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+. "$HOME/.cargo/env"
+source /home/eb/Documents/repositorios/alacritty/extra/completions/alacritty.bash
+source ~/.bash_completion/alacritty
