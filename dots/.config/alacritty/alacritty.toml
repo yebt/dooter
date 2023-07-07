@@ -1,0 +1,35 @@
+live_config_reload = true
+
+[env]
+TERM = "xterm-256color"
+
+[font.normal]
+# family = "BlexMono Nerd Font"
+family = "Input Mono"
+# family = "Input Mono Narrow"
+# family = "Input Mono Condensed"
+# family = "Input Mono Compressed"
+
+[[keyboard.bindings]]
+chars = "\u001B[13;2u"
+key = "Return"
+mods = "Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B[13;5u"
+key = "Return"
+mods = "Control"
+
+[shell]
+args = ["--login"]
+program = "/bin/fish"
+
+[window]
+decorations = "none"
+dynamic_padding = false
+opacity = 0.99
+title = "Alacritty"
+
+[window.padding]
+x = 2
+y = 2
