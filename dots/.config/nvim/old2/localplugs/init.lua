@@ -1,2 +1,0 @@
--- Runner
-require ("localplugs.runner")
