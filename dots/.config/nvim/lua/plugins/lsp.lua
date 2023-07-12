@@ -3,9 +3,12 @@ return {
 	-- LSP settings
 	{
 		"neovim/nvim-lspconfig",
-		event = { "BufReadPre", "BufNewFile" },
+		-- event = { "BufReadPre", "BufNewFile" },
+		-- event = "VeryLazy",
+		event = "User PostVeryLazy",
+
 		dependencies = {
-			-- { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+			{ "folke/neoconf.nvim", cmd = "Neoconf", config = true },
 			-- { "folke/neodev.nvim", opts = {} }, -- this couse that lua server be slow
 		},
 
@@ -16,7 +19,7 @@ return {
 			msnlsp.setup()
 			-- default sercver configs
 			local default_config = {}
-			--
+			-- LSP server configs
 			msnlsp.setup_handlers({
 				function(server_name) -- default handler (optional)
 					require("lspconfig")[server_name].setup(default_config)
@@ -41,6 +44,24 @@ return {
 					require("lspconfig")["lua_ls"].setup(default_config)
 				end,
 			})
+			-- linters and formatters
+			require("mason-null-ls").setup({
+				ensure_installed = {
+					-- Opt to list sources here, when available in mason.
+					"stylua",
+					"jq",
+				},
+				automatic_installation = false,
+				handlers = {},
+			})
+			require("null-ls").setup({
+				sources = {
+					-- Anything not supported by mason.
+				},
+			})
+			-- show status
+			local fidget = require("fidget")
+			fidget.setup({})
 		end,
 	},
 
@@ -77,10 +98,15 @@ return {
 		},
 	},
 
-	-- Linters and Formatters
+	-- Linters and Formatters starter
 	{
-	  "jose-elias-alvarez/null-ls.nvim"
-	}
+		"jose-elias-alvarez/null-ls.nvim",
+	},
+
+	-- bridge with mason & null-ls
+	{
+		"jay-babu/mason-null-ls.nvim",
+	},
 
 	-- -- Linting
 	-- {
@@ -125,4 +151,10 @@ return {
 	-- 		})
 	-- 	end,
 	-- },
+
+	-- Status
+	{
+		"j-hui/fidget.nvim",
+		tag = 'legacy'
+	},
 }

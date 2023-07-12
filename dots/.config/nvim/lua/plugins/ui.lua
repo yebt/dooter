@@ -237,7 +237,7 @@ return {
 	-- Status COl
 	{
 		"luukvbaal/statuscol.nvim",
-		-- event = "VeryLazy",
+		event = "User PostVeryLazy",
 		config = function()
 			local builtin = require("statuscol.builtin")
 			require("statuscol").setup({
@@ -265,4 +265,50 @@ return {
 			})
 		end,
 	},
+
+	--
+	-- {
+	-- 	"nvim-lualine/lualine.nvim",
+	-- 	event = "User PostVeryLazy",
+	-- 	dependencies = {
+	-- 		"nvim-tree/nvim-web-devicons",
+	-- 	},
+	-- 	opts = {
+	-- 		options = {
+	-- 			icons_enabled = true,
+	-- 			theme = "auto",
+	-- 			component_separators = { left = "", right = "" },
+	-- 			section_separators = { left = "", right = "" },
+	-- 			disabled_filetypes = {
+	-- 				statusline = {},
+	-- 				winbar = {},
+	-- 			},
+	-- 			ignore_focus = {},
+	-- 			always_divide_middle = true,
+	-- 			globalstatus = true,
+	-- 			refresh = {
+	-- 				statusline = 1000,
+	-- 				tabline = 1000,
+	-- 				winbar = 1000,
+	-- 			},
+	-- 		},
+	--
+	-- 		sections = {
+	-- 			lualine_a = {},
+	-- 			lualine_b = { "branch" },
+	-- 			lualine_c = { { "filename", path = 1 }, "%=", "diagnostics"},
+	-- 			lualine_x = { "filetype" },
+	-- 			lualine_y = { "progress" },
+	-- 			lualine_z = {
+	-- 				"location",
+	-- 				{
+	-- 					"mode",
+	-- 					fmt = function(str)
+	-- 						return str:sub(1, 1)
+	-- 					end,
+	-- 				},
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
 }

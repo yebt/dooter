@@ -54,17 +54,20 @@ end, {
 })
 
 local function redefSomeColors()
+	--  ## Matchup Plugin
 	-- vim.api.nvim_set_hl(0, "MatchParen", { bold = true, italic = true })
 	vim.api.nvim_set_hl(0, "MatchParenCur", { bold = true, italic = true })
 	-- vim.api.nvim_set_hl(0, "MatchWordCur", { bold = true, italic = true })
 	vim.api.nvim_set_hl(0, "MatchWordCur", {
 		italic = true,
 	})
+
+	--  ## Leap Plugin
 	vim.api.nvim_set_hl(0, "LeapLabelPrimary", { fg = "#ff007c", bold = true })
 	vim.api.nvim_set_hl(0, "LeapLabelSecondary", { fg = "#00dfff", bold = true })
 	vim.api.nvim_set_hl(0, "LeapBackdrop", { fg = "grey" })
 
-	-- Vitesse solutiona colors
+	-- ## Vitesse solutiona colors
 	if vim.g.colors_name == "vitesse" then
 		-- local vitesse_colors = require("vitesse.colors").colors
 		-- local vitesse_themes = require("vitesse.colors").themes
@@ -90,7 +93,8 @@ local function redefSomeColors()
 		local colorAtype = vim.api.nvim_get_hl(0, { name = "@type" })
 		local colorAconstant = vim.api.nvim_get_hl(0, { name = "@constant" })
 		local colorAoperator = vim.api.nvim_get_hl(0, { name = "@operator" })
-		local colorAtype = vim.api.nvim_get_hl(0, { name = "@type" })
+
+		-- local colorAtype = vim.api.nvim_get_hl(0, { name = "@type" })
 		-- --
 		-- -- vim.api.nvim_set_hl(0, "StatusLine", { fg = "#d4cfbf", bg = colroSTL.bg })
 		vim.api.nvim_set_hl(0, "StatusLine", { fg = "#d4cfbf", bg = "#181818" })
@@ -99,13 +103,12 @@ local function redefSomeColors()
 		vim.api.nvim_set_hl(0, "NormalFloat", { fg = "#c8c5b8", bg = "#1e1e1e" })
 
 		-- Customization for Pmenu
+		--
 
-		vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#1e1e1e", fg = "NONE" })
-		vim.api.nvim_set_hl(0, "Pmenu", { fg = "#C5CDD9", bg = "#1e1e1e" })
+		vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#181818", fg = "NONE" })
+		vim.api.nvim_set_hl(0, "Pmenu", { fg = "None", bg = "#222222" })
 
-		-- vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { fg = "#7E8294", bg = "NONE", strikethrough = true })
-		-- vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { fg = "#82AAFF", bg = "NONE", bold = true })
-		-- vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { fg = "#82AAFF", bg = "NONE", bold = true })
+		vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { fg = "#7E8294", bg = "NONE", strikethrough = true })
 		-- vim.api.nvim_set_hl(0, "CmpItemMenu", { fg = "#C792EA", bg = "NONE", italic = true })
 		--
 		vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { fg = "#429988", bg = "NONE", bold = true })
@@ -160,13 +163,49 @@ local function redefSomeColors()
 		-- vim.api.nvim_set_hl(0, "CmpItemKindInterface", { fg = "#D8EEEB", bg = "#58B5A8" })
 		-- vim.api.nvim_set_hl(0, "CmpItemKindColor", { fg = "#D8EEEB", bg = "#58B5A8" })
 		-- vim.api.nvim_set_hl(0, "CmpItemKindTypeParameter", { fg = "#D8EEEB", bg = "#58B5A8" })
-		
 	end
+
+	--  ## User Colors
+	-- General
+	local colorContrast = vim.api.nvim_get_hl(0, { name = "Constant" })
+	local colorError = vim.api.nvim_get_hl(0, { name = "Error" })
+	local colorSpecial = vim.api.nvim_get_hl(0, { name = "Special" })
+	local colorStatusLine = vim.api.nvim_get_hl(0, { name = "StatusLine" })
+	local colorType = vim.api.nvim_get_hl(0, { name = "Type" })
+	local colorNumber = vim.api.nvim_get_hl(0, { name = "Number" })
+
+	-- Diagnostics
+	-- vim.diagnostic.severity.ERROR 1
+	-- vim.diagnostic.severity.WARN 2
+	-- vim.diagnostic.severity.INFO 3
+	-- vim.diagnostic.severity.HINT 4
+
+	local colorDiagnosticError = vim.api.nvim_get_hl(0, { name = "DiagnosticError" })
+	local colorDiagnosticWarn = vim.api.nvim_get_hl(0, { name = "DiagnosticWarn" })
+	local colorDiagnosticInfo = vim.api.nvim_get_hl(0, { name = "DiagnosticInfo" })
+	local colorDiagnosticHint = vim.api.nvim_get_hl(0, { name = "DiagnosticHint" })
+
+	-- Set colors
+	-- General
+	vim.api.nvim_set_hl(0, "User1", { bg = colorStatusLine.bg, fg = colorContrast.fg })
+	vim.api.nvim_set_hl(0, "User2", { bg = colorStatusLine.bg, fg = colorError.fg, bold = true })
+	vim.api.nvim_set_hl(0, "User3", { bg = colorStatusLine.bg, fg = colorSpecial.fg, italic = true })
+	vim.api.nvim_set_hl(0, "User4", { bg = colorStatusLine.bg, fg = colorNumber.fg, italic = true })
+	-- Diagnostic
+	vim.api.nvim_set_hl(0, "User9", { bg = colorStatusLine.bg, fg = colorDiagnosticError.fg, bold = true })
+	vim.api.nvim_set_hl(0, "User8", { bg = colorStatusLine.bg, fg = colorDiagnosticWarn.fg , bold = true})
+	vim.api.nvim_set_hl(0, "User7", { bg = colorStatusLine.bg, fg = colorDiagnosticInfo.fg , bold = true})
+	vim.api.nvim_set_hl(0, "User6", { bg = colorStatusLine.bg, fg = colorDiagnosticHint.fg , bold = true})
+	-- Errors severity
+	vim.api.nvim_set_hl(0, "User5", { fg = colorStatusLine.bg, bg = colorError.fg })
+
+	-- ## Other colors
+	vim.api.nvim_set_hl(0, "_ColorGreen", { fg = "teal", bg = colorStatusLine.bg })
 end
 
 -- Colorscheme
 vim.api.nvim_create_autocmd("ColorScheme", {
-	once = true,
+	-- once = true,
 	callback = redefSomeColors,
 })
 

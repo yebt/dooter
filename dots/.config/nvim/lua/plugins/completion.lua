@@ -146,7 +146,12 @@ return {
 			"hrsh7th/cmp-nvim-lsp-signature-help",
 			"hrsh7th/cmp-nvim-lsp-document-symbol",
 			--
-			{ "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
+			{
+				"roobert/tailwindcss-colorizer-cmp.nvim",
+				opts = {
+					color_square_width = 2,
+				},
+			},
 			--
 			-- {
 			--   "zbirenbaum/copilot-cmp",
@@ -182,6 +187,15 @@ return {
 			lspkind.init({
 				preset = "codicons",
 			})
+
+			local menu_type = {
+				buffer = "[Bffr]",
+				nvim_lsp = "[LSP]",
+				luasnip = "[LSnip]",
+				path = "[PTH]",
+			}
+
+			local get_icon = require("nvim-web-devicons").get_icon
 
 			cmp.setup({
 
@@ -224,7 +238,7 @@ return {
 								select = true,
 							})
 						elseif require("copilot.suggestion").is_visible() then
-						  vim.notify("?")
+							vim.notify("?")
 							require("copilot.suggestion").accept({})
 						elseif luasnip.expand_or_jumpable() then
 							luasnip.expand_or_jump()
@@ -320,6 +334,62 @@ return {
 					-- { name = "copilot", group_index = 2 },
 				}),
 
+				view = {
+					entries = "custom", -- can be "custom", "wildmenu" or "native"
+				},
+
+				formatting = {
+					fields = { "kind", "abbr", "menu" },
+					format = function(entry, item)
+						if vim.tbl_contains({ "path" }, entry.source.name) then
+							local icon, hl_group = get_icon(entry:get_completion_item().label)
+							if icon then
+								item.kind = " " .. icon .. " "
+								item.menu = "    (" .. entry.source.name .. ")"
+								item.kind_hl_group = hl_group
+								-- return item
+							end
+						else
+							local kind = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, item)
+							local strings = vim.split(kind.kind, "%s", { trimempty = true })
+							kind.kind = " " .. (strings[1] or "") .. " "
+							kind.menu = "    (" .. (strings[2] or "") .. ")"
+						end
+						
+						item = require("tailwindcss-colorizer-cmp").formatter(entry, item)
+						return item
+					end,
+
+					-- format = lspkind.cmp_format({
+					-- 	mode = "symbol_text",
+					-- 	menu = {
+					-- 		buffer = "[Bffr]",
+					-- 		nvim_lsp = "[LSP]",
+					-- 		luasnip = "[LSnip]",
+					-- 		path = "[PTH]",
+					-- 		-- nvim_lua = "[Lua]",
+					-- 		-- latex_symbols = "[Latex]",
+					-- 	},
+					-- }),
+
+					-- format = function(entry, item)
+					-- 	-- 		local kind = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+					-- 	-- 		local strings = vim.split(kind.kind, "%s", { trimempty = true })
+					-- 	-- 		kind.kind = " " .. (strings[1] or "") .. " "
+					-- 	-- 		kind.menu = "    (" .. (strings[2] or "") .. ")"
+					-- 	-- 		return require("tailwindcss-colorizer-cmp").formatter(entry, kind)
+					--
+					-- 	return require("tailwindcss-colorizer-cmp").formatter(entry, item)
+					-- end,
+				},
+				window = {
+					completion = {
+						-- winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+						col_offset = -3,
+						side_padding = 0,
+					},
+				},
+
 				-- formatting = {
 				-- 	-- 	-- fields = { "menu", "abbr", "kind" },
 				-- 	-- fields = { "kind", "abbr", "menu" },
@@ -372,25 +442,25 @@ return {
 				--     cmp.config.compare.order,
 				--   },
 				-- },
-
-				formatting = {
-					fields = { "kind", "abbr", "menu" },
-					format = function(entry, vim_item)
-						local kind = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
-						local strings = vim.split(kind.kind, "%s", { trimempty = true })
-						kind.kind = " " .. (strings[1] or "") .. " "
-						kind.menu = "    (" .. (strings[2] or "") .. ")"
-						return require("tailwindcss-colorizer-cmp").formatter(entry, kind)
-						-- return kind
-					end,
-				},
-				window = {
-					completion = {
-						winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
-						col_offset = -3,
-						side_padding = 0,
-					},
-				},
+				--
+				-- formatting = {
+				-- 	fields = { "kind", "abbr", "menu" },
+				-- 	format = function(entry, vim_item)
+				-- 		local kind = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
+				-- 		local strings = vim.split(kind.kind, "%s", { trimempty = true })
+				-- 		kind.kind = " " .. (strings[1] or "") .. " "
+				-- 		kind.menu = "    (" .. (strings[2] or "") .. ")"
+				-- 		return require("tailwindcss-colorizer-cmp").formatter(entry, kind)
+				-- 		-- return kind
+				-- 	end,
+				-- },
+				-- window = {
+				-- 	completion = {
+				-- 		winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+				-- 		col_offset = -3,
+				-- 		side_padding = 0,
+				-- 	},
+				-- },
 
 				-- experimental = {
 				--   ghost_text = {
@@ -414,6 +484,7 @@ return {
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
 		build = ":Copilot auth",
+		event = "InsertEnter",
 		opts = {
 			panel = {
 				enabled = true,

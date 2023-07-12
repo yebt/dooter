@@ -1,5 +1,5 @@
 function name()
-  -- code
+	-- code
 end
 
 return {
@@ -63,4 +63,8 @@ return {
 			hardtime.enable()
 		end,
 	},
+
+	{ "nvim-lua/plenary.nvim" },
+
+
 }
