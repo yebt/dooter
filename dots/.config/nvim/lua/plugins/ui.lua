@@ -311,4 +311,84 @@ return {
 	-- 		},
 	-- 	},
 	-- },
+
+	-- indent scope
+	{
+		"echasnovski/mini.indentscope",
+		version = false, -- wait till new 0.7.0 release to put it back on semver
+		-- event = { "BufReadPre", "BufNewFile" },
+		event = "VeryLazy",
+		init = function()
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = {
+					"help",
+					"alpha",
+					"dashboard",
+					"neo-tree",
+					"Trouble",
+					"lazy",
+					"mason",
+					"notify",
+					"toggleterm",
+					"lazyterm",
+				},
+				callback = function()
+					vim.b.miniindentscope_disable = true
+				end,
+			})
+		end,
+		config = function()
+			local mini_is = require("mini.indentscope")
+			mini_is.setup({
+				-- options go here
+				draw = {
+					delay = 100,
+					animation = mini_is.gen_animation.none(),
+				},
+				options = {
+					-- Type of scope's border: which line(s) with smaller indent to
+					-- categorize as border. Can be one of: 'both', 'top', 'bottom', 'none'.
+					border = "both",
+
+					-- Whether to use cursor column when computing reference indent.
+					-- Useful to see incremental scopes with horizontal cursor movements.
+					indent_at_cursor = true,
+
+					-- Whether to first check input line to be a border of adjacent scope.
+					-- Use it if you want to place cursor on function header to get scope of
+					-- its body.
+					try_as_border = false,
+				},
+
+				-- Which character to use for drawing scope indicator
+				-- symbol = "▏",
+				symbol = "│",
+			})
+		end,
+	},
+
+	-- indent guides for Neovim
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		-- event = { "BufReadPost", "BufNewFile" },
+		event = "VeryLazy",
+		opts = {
+			-- char = "▏",
+			char = "│",
+			filetype_exclude = {
+				"help",
+				"alpha",
+				"dashboard",
+				"neo-tree",
+				"Trouble",
+				"lazy",
+				"mason",
+				"notify",
+				"toggleterm",
+				"lazyterm",
+			},
+			show_trailing_blankline_indent = false,
+			show_current_context = false,
+		},
+	},
 }

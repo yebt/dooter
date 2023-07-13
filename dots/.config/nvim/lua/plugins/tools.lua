@@ -91,13 +91,11 @@ return {
 		},
 	},
 
-
-
 	-- RUNNER
 	{
 		"CRAG666/code_runner.nvim",
 		keys = {
-			{ "<leader>r", ":RunFile<CR>", desc = "Run file" },
+			{ "<leader>R", ":RunFile<CR>", desc = "Run file" },
 			{ "<F9>", ":RunFile<CR>", desc = "Run file" },
 		},
 		opts = {
@@ -227,21 +225,73 @@ return {
 					require("resession").load("last")
 				end,
 				silent = true,
+				desc = "Load last session",
 			},
 			{
 				"<leader>ls",
 				function()
 					require("resession").save()
 				end,
+				silent = true,
+				desc = "Save session",
 			},
 			{
 				"<leader>lr",
 				function()
 					require("resession").load()
 				end,
+				silent = true,
+				desc = "Load session",
 			},
 			-- { "<leader>lr", ":lua require('resession').load()<CR>" },
 		},
 		opts = {},
+	},
+
+	--
+	-- {
+	-- 	"Wansmer/treesj",
+	-- 	-- keys = { '<space>m', '<space>j', '<space>s' },
+	-- 	keys = {
+	--      { "<leader>ts", ":TSJSplit<CR>", silent = true, desc = "TS Split" },
+	--      { "<leader>tj", ":TSJJoin<CR>", silent = true, desc = "TS Split join" },
+	--    },
+	-- 	cmd = {
+	--      "TSJToggle",
+	--      "TSJSplit",
+	--      "TSJJoin",
+	--    },
+	-- 	opts = {
+	-- 		use_default_keymaps = false,
+	-- 	},
+	-- },
+
+	-- Splits
+	-- {
+	-- 	"bennypowers/splitjoin.nvim",
+	-- 	keys = {
+	-- 		{
+	-- 			"gj",
+	-- 			function()
+	-- 				require("splitjoin").join()
+	-- 			end,
+	-- 			desc = "Join the object under cursor",
+	-- 		},
+	-- 		{
+	-- 			"g,",
+	-- 			function()
+	-- 				require("splitjoin").split()
+	-- 			end,
+	-- 			desc = "Split the object under cursor",
+	-- 		},
+	-- 	},
+	-- },
+
+	{
+		"AndrewRadev/splitjoin.vim",
+		keys = {
+			{ "gJ", desc = "Block Split Join" },
+			{ "gS", desc = "Block Splt" },
+		},
 	},
 }

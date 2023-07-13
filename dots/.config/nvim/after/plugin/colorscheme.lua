@@ -130,6 +130,12 @@ local function redefSomeColors()
 		vim.api.nvim_set_hl(0, "CmpItemKindOperator", { fg = colorAoperator.fg })
 		vim.api.nvim_set_hl(0, "CmpItemKindTypeParameter", { fg = colorAtype.fg })
 
+		-- seach
+		vim.api.nvim_set_hl(0, "Search", { fg = "#211221", bg = "#D4BB6C", underline = true })
+		-- current seacr curseach
+		vim.api.nvim_set_hl(0, "IncSearch", { fg = "#000000", bg = "#1c6b48" })
+		vim.api.nvim_set_hl(0, "CurSearch", { fg = "#211221", bg = "#54b1bf", italic = true, bold = true })
+
 		--
 		-- vim.api.nvim_set_hl(0, "CmpItemKindField", { fg = "#EED8DA", bg = "#B5585F" })
 		-- vim.api.nvim_set_hl(0, "CmpItemKindProperty", { fg = "#EED8DA", bg = "#B5585F" })
@@ -163,6 +169,13 @@ local function redefSomeColors()
 		-- vim.api.nvim_set_hl(0, "CmpItemKindInterface", { fg = "#D8EEEB", bg = "#58B5A8" })
 		-- vim.api.nvim_set_hl(0, "CmpItemKindColor", { fg = "#D8EEEB", bg = "#58B5A8" })
 		-- vim.api.nvim_set_hl(0, "CmpItemKindTypeParameter", { fg = "#D8EEEB", bg = "#58B5A8" })
+		--
+		-- ## lspreferece
+		local colroRef = "#202020"
+		-- local colroRef = "#333333"
+		vim.api.nvim_set_hl(0, "lspreferencewrite", { bg = colroRef })
+		vim.api.nvim_set_hl(0, "lspreferenceread", { bg = colroRef })
+		vim.api.nvim_set_hl(0, "lspreferencetext", { bg = colroRef })
 	end
 
 	--  ## User Colors
@@ -193,9 +206,9 @@ local function redefSomeColors()
 	vim.api.nvim_set_hl(0, "User4", { bg = colorStatusLine.bg, fg = colorNumber.fg, italic = true })
 	-- Diagnostic
 	vim.api.nvim_set_hl(0, "User9", { bg = colorStatusLine.bg, fg = colorDiagnosticError.fg, bold = true })
-	vim.api.nvim_set_hl(0, "User8", { bg = colorStatusLine.bg, fg = colorDiagnosticWarn.fg , bold = true})
-	vim.api.nvim_set_hl(0, "User7", { bg = colorStatusLine.bg, fg = colorDiagnosticInfo.fg , bold = true})
-	vim.api.nvim_set_hl(0, "User6", { bg = colorStatusLine.bg, fg = colorDiagnosticHint.fg , bold = true})
+	vim.api.nvim_set_hl(0, "User8", { bg = colorStatusLine.bg, fg = colorDiagnosticWarn.fg, bold = true })
+	vim.api.nvim_set_hl(0, "User7", { bg = colorStatusLine.bg, fg = colorDiagnosticInfo.fg, bold = true })
+	vim.api.nvim_set_hl(0, "User6", { bg = colorStatusLine.bg, fg = colorDiagnosticHint.fg, bold = true })
 	-- Errors severity
 	vim.api.nvim_set_hl(0, "User5", { fg = colorStatusLine.bg, bg = colorError.fg })
 

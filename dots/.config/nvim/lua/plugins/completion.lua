@@ -194,7 +194,6 @@ return {
 				luasnip = "[LSnip]",
 				path = "[PTH]",
 			}
-
 			local get_icon = require("nvim-web-devicons").get_icon
 
 			cmp.setup({
@@ -211,8 +210,45 @@ return {
 				-- preselect = types.cmp.PreselectMode.Item,
 
 				mapping = cmp.mapping.preset.insert({
-					["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+					-- ["<C-x><C-f>"] = cmp.mapping.complete({
+					-- 	config = {
+					-- 		sources = {
+					-- 			{ name = "path", option = { trailing_slash = true } },
+					-- 		},
+					-- 	},
+					-- },{"i"}),
+					-- ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
 					["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+					["<C-n>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+						else
+							cmp.complete({
+								config = {
+									sources = {
+										{
+											name = "buffer",
+											option = {
+												option = {
+													get_bufnrs = function()
+														return vim.api.nvim_list_bufs()
+													end,
+												},
+											},
+										},
+									},
+								},
+							})
+							-- fallback()
+						end
+					end, { "i", "s" }),
+					["<C-s>"] = cmp.mapping.complete({
+						config = {
+							sources = {
+								{ name = "luasnip" },
+							},
+						},
+					}),
 					["<C-u>"] = cmp.mapping.scroll_docs(-4),
 					["<C-d>"] = cmp.mapping.scroll_docs(4),
 					["<C-Space>"] = cmp.mapping.complete(),
@@ -350,12 +386,12 @@ return {
 								-- return item
 							end
 						else
-							local kind = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, item)
+							local kind = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50})(entry, item)
 							local strings = vim.split(kind.kind, "%s", { trimempty = true })
 							kind.kind = " " .. (strings[1] or "") .. " "
-							kind.menu = "    (" .. (strings[2] or "") .. ")"
+							kind.menu = "    (" .. (strings[2] or "") .. ")" .. menu_type[entry.source.name]
 						end
-						
+
 						item = require("tailwindcss-colorizer-cmp").formatter(entry, item)
 						return item
 					end,
@@ -468,6 +504,11 @@ return {
 				--   },
 				-- },
 			})
+
+			-- Add parentheses after selecting function or method item
+
+			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
 			-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
 			-- cmp.setup.cmdline({ "/", "?" }, {

@@ -156,6 +156,7 @@ local status_str = ""
 	-- .. "%-14.(%l/%L:%c%V%) %P"
 	-- .. " %2l/%L:%c%V "
 	.. " %2l/%L:%c "
+	.. "%{ mode() }"
 	.. "%#Normal# %0*" -- xpadding
 
 local winbar_str = ""

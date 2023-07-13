@@ -158,4 +158,11 @@ return {
 			vim.g.matchup_matchparen_deferred = 1 -- improve the perfomance
 		end,
 	},
+
+  --
+  {
+    "fei6409/log-highlight.nvim",
+    ft = "log",
+  }
+
 }
