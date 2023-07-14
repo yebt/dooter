@@ -33,4 +33,3 @@ require("config.autocmdplugins")
 
 --
 require("config.lsp")
-

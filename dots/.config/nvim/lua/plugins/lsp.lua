@@ -5,12 +5,12 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		-- event = { "BufReadPre", "BufNewFile" },
-		-- event = "VeryLazy",
-		event = "User PostVeryLazy",
+		event = "VeryLazy",
+		-- event = "User PostVeryLazy",
 
 		dependencies = {
 			-- { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-			{ "folke/neodev.nvim", opts = {} }, -- this couse that lua server be slow
+			-- { "folke/neodev.nvim", opts = {} }, -- this couse that lua server be slow
 			{
 				"b0o/schemastore.nvim",
 			},
@@ -151,8 +151,8 @@ return {
 			})
 
 			-- show status
-			local fidget = require("fidget")
-			fidget.setup()
+			-- local fidget = require("fidget")
+			-- fidget.setup()
 		end,
 	},
 
@@ -210,16 +210,20 @@ return {
 	-- 		-- use stylua to format lua files and no linter
 	--
 	-- 		-- Lua
-	-- 		ft("lua"):fmt("stylua")
+	-- 		ft("lua"):fmt({
+	-- 			cmd = "stylua",
+	-- 			args = { "-" },
+	-- 			ignore_error = false,
+	-- 			stdin = true,
+	-- 		})
 	--
 	-- 		--  Markdown format and linter
-	-- 		ft("markdown"):fmt("prettier")
-	-- 		:lint({
+	-- 		ft("markdown"):fmt("prettier"):lint({
 	-- 			cmd = "markdownlint",
 	-- 			args = { "--stdin" },
 	-- 			stdin = true,
 	-- 			output_fmt = function(result, buf)
-	-- 			  vim.notify(vim.inspect(result))
+	-- 				vim.notify(vim.inspect(result))
 	-- 				local output = vim.split(result, "\n")
 	-- 				local patterns = {
 	-- 					"E%d+",
@@ -242,8 +246,7 @@ return {
 	-- 			end,
 	-- 		})
 	--
-	-- 		ft('python'):lint('pylint')
-	--
+	-- 		ft("python"):lint("pylint")
 	--
 	-- 		require("guard").setup({
 	-- 			-- the only option for the setup function
@@ -297,34 +300,63 @@ return {
 	-- },
 
 	-- Status
+	-- Replace by noice nvim
 	{
 		"j-hui/fidget.nvim",
 		tag = "legacy",
+		lazy = false,
 		opts = {
 			text = {
 				spinner = "dots", -- animation shown when tasks are ongoing
-				done = "0k", -- character shown when all tasks are complete
+				done = "✔", -- character shown when all tasks are complete
 				commenced = "Started", -- message shown when task starts
 				completed = "Completed", -- message shown when task completes
 			},
-			-- align = {
-			-- 	bottom = false, -- align fidgets along bottom edge of buffer
-			-- 	right = true, -- align fidgets along right edge of buffer
-			-- },
+			align = {
+				bottom = true, -- align fidgets along bottom edge of buffer
+				right = true, -- align fidgets along right edge of buffer
+			},
+			timer = {
+				spinner_rate = 125, -- frame rate of spinner animation, in ms
+				fidget_decay = 2000, -- how long to keep around empty fidget, in ms
+				task_decay = 1000, -- how long to keep around completed task, in ms
+			},
 			window = {
 				relative = "win", -- where to anchor, either "win" or "editor"
 				blend = 0, -- &winblend for the window
 				zindex = nil, -- the zindex value for the window
-				border = "single", -- style of border for the fidget window
+				border = "none", -- style of border for the fidget window
+			},
+			fmt = {
+				leftpad = true, -- right-justify text in fidget box
+				stack_upwards = true, -- list of tasks grows upwards
+				max_width = 0, -- maximum width of the fidget box
+				-- function to format fidget title
+				fidget = function(fidget_name, spinner)
+					return string.format("%s %s", spinner, fidget_name)
+				end,
+				-- function to format each task line
+				task = function(task_name, message, percentage)
+					return string.format(
+						"%s%s [%s]",
+						message,
+						percentage and string.format(" (%s%%)", percentage) or "",
+						task_name
+					)
+				end,
 			},
 			sources = { -- Sources to configure
-				["null-ls"] = { -- Name of source
-					ignore = true, -- Ignore notifications from this source
+				["Dignosing"] = {                     -- Name of source
+				  ignore = true,         -- Ignore notifications from this source
 				},
+			}, 
+			debug = {
+				logging = false, -- whether to enable logging, for debugging
+				strict = true, -- whether to interpret LSP strictly
 			},
 		},
 	},
-
+	--
 	-- diagnostic list
 	{
 		"folke/trouble.nvim",

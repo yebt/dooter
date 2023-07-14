@@ -208,7 +208,8 @@ return {
 	-- Vitesse
 	{
 		-- "yebt/vitesse.nvim",
-		url = "git@github.com:yebt/vitesse.nvim.git",
+		-- url = "git@github.com:yebt/vitesse.nvim.git",
+		"2nthony/vitesse.nvim",
 		-- "2nthony/vitesse.nvim",
 		dependencies = {
 			"tjdevries/colorbuddy.nvim",

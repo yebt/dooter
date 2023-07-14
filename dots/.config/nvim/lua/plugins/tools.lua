@@ -2,6 +2,9 @@ return {
 	-- Repeat actions
 	{
 		"tpope/vim-repeat",
+		keys = {
+			{ ".", desc = "repeat last action" },
+		},
 	},
 
 	-- Library
@@ -53,6 +56,23 @@ return {
 					color = "#81e043",
 					name = "Log",
 				},
+				["ts"] = {
+					icon = "",
+					color = "#519aba",
+					cterm_color = "74",
+					name = "Ts",
+				},
+				["spec.ts"] = {
+					icon = "",
+					color = "#bf672d",
+					cterm_color = "74",
+					name = "SpecTs",
+				},
+				["blade.php"] ={
+				  icon = "󰫐",
+				  color = "#f13d30",
+				  name = "BladePhp",
+				}
 			},
 		},
 	},
