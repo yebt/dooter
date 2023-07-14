@@ -137,12 +137,29 @@ bindsym XF86MonBrightnessUp   exec --no-startup-id light -A $brigness_porcent &&
 bindsym XF86MonBrightnessDown exec --no-startup-id light -U $brigness_porcent && $notificate -u low -r 9 -t 900 -h int:value:$(light -G) "Brgnss $(light -G)%"
 
 #scrot '/tmp/%F_%T_$wx$h.png' -s -e 'xclip -selection clipboard -target image/png -i $f'
-bindsym --release Print exec --no-startup-id "scrot  ~/Pictures/screenshots/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot\n $f\\" Scrot' " 
-bindsym --release Shift+Print exec --no-startup-id "scrot -s ~/Pictures/screenshots/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot\n $f\\" Scrot' " 
-bindsym --release $mod+Print exec --no-startup-id "scrot -u ~/Pictures/screenshots/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot\n $f\\" Scrot' " 
-bindsym --release Control+Print exec --no-startup-id "scrot  /tmp/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot copied on clipboard\\" Scrot & xclip -selection clipboard -target image/png -i $f' " 
-bindsym --release Control+Shift+Print exec --no-startup-id "scrot -s /tmp/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot copied on clipboard\\" Scrot & xclip -selection clipboard -target image/png -i $f' " 
-bindsym --release Control+$mod+Print exec --no-startup-id "scrot -u /tmp/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot copied on clipboard\\" Scrot & xclip -selection clipboard -target image/png -i $f' " 
+# bindsym --release Print exec --no-startup-id "scrot  ~/Pictures/screenshots/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot\n $f\\" Scrot' " 
+# bindsym --release Shift+Print exec --no-startup-id "scrot -s ~/Pictures/screenshots/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot\n $f\\" Scrot' " 
+# bindsym --release $mod+Print exec --no-startup-id "scrot -u ~/Pictures/screenshots/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot\n $f\\" Scrot' " 
+# bindsym --release Control+Print exec --no-startup-id "scrot  /tmp/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot copied on clipboard\\" Scrot & xclip -selection clipboard -target image/png -i $f' " 
+# bindsym --release Control+Shift+Print exec --no-startup-id "scrot -s /tmp/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot copied on clipboard\\" Scrot & xclip -selection clipboard -target image/png -i $f' " 
+# bindsym --release Control+$mod+Print exec --no-startup-id "scrot -u /tmp/scrot_%F_%T_\$wx\$h_.png -e 'notify-send -t 2000 \\"Screnshot copied on clipboard\\" Scrot & xclip -selection clipboard -target image/png -i $f' " 
+
+## ScreenShot
+# Captute full screen
+bindsym --release Print exec "maim -u -f png  ~/Pictures/Screenshots/Screenshot_$(date +%s).png &&  dunstify  -u low --replace=699 'Screen shot saved'"
+bindsym --release $mod+Shift+S exec "maim -u -f png -s -b 2 -c 0.35,0.55,0.85,0.25 -l  ~/Pictures/Screenshots/$(date +%s).png &&  dunstify  -u low --replace=699 'Screen shot saved'"
+
+## color picker
+bindsym --release $mod+Shift+P exec "/home/eb/Documents/test/colorpicker2/clp.sh"
+
+# Capture selection
+# Capture window
+# Capture window with border
+# Capture window without border
+# Capture window with border and shadow
+
+# bindsym --release Print exec --no-startup-id "maim "
+
 
 # Play controls
 bindsym XF86AudioPlay exec playerctl play
