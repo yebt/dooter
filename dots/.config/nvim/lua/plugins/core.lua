@@ -55,7 +55,7 @@ return {
 			-- 	["<LEFT>"] = { "", "i" },
 			-- 	["<RIGHT>"] = { "", "i" },
 			-- },
-			disabled_filetypes = { "qf", "netrw", "NvimTree", "lazy", "mason" },
+			disabled_filetypes = { "qf", "netrw", "NvimTree", "lazy", "mason" ,"neo-tree", "telescope"},
 		},
 		config = function(_, opts)
 			local hardtime = require("hardtime")
